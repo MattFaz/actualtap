@@ -40,6 +40,7 @@ To run Actual Tap locally *(i.e. for development or not containerised)*:
 - Edit the `.env` file accordingly
 
 To run Actual Tap in docker ensure you edit variables in the `docker-compose.yml` file.
+- **Note:** You will also need to update the volumes path
 
 Both will need to ensure they have the following environment variables:
 - **Note:** Do not edit the `NODE_ENV` variable, leave it as its default
