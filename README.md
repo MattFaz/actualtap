@@ -72,10 +72,3 @@ The app will be running on port `3001`
 ## Android Setup
 
 TBC
-
-## Caddy
-Below is the caddyfile I use:
-
-```
-xxx
-```
