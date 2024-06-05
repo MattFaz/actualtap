@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "@actual-app/api": "^6.8.0",
+    "@fastify/cors": "^9.0.1",
+    "@fastify/env": "^4.3.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.27.0",
+    "fastify-plugin": "^4.5.1"
+  },
+  "name": "actualtap",
+  "version": "1.0.0",
+  "description": "Automatically create transactions in Actual Budget when you use Tap-to-Pay on a mobile device",
+  "main": "index.js",
+  "repository": "https://github.com/MattFaz/actualtap",
+  "author": "Matt Farrell",
+  "license": "GPL-3.0",
+  "private": false,
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon --ignore ./data/ node src/server.js"
+  }
+}
