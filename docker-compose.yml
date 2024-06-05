@@ -11,3 +11,5 @@ services:
       - ACTUAL_PASSWORD=
       - ACTUAL_BUDGET_ID=
       - ACTUAL_DEFAULT_ACCOUNT_ID=
+    volumes:
+      - /your/path/here:/app/data
