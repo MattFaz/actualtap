@@ -1,0 +1,13 @@
+services:
+  actualtap:
+    container_name: actualtap
+    build: .
+    ports:
+      - 3001:3001
+    environment:
+      - NODE_ENV=production
+      - API_KEY=
+      - ACTUAL_URL=
+      - ACTUAL_PASSWORD=
+      - ACTUAL_BUDGET_ID=
+      - ACTUAL_DEFAULT_ACCOUNT_ID=
