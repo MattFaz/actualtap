@@ -2,7 +2,7 @@ const transactionSchema = {
     schema: {
         body: {
             type: 'object',
-            required: ['merchant', 'amount'],
+            required: ['amount'],
             properties: {
                 merchant: { type: 'string', minLength: 1 },
                 amount: { type: 'number' }
@@ -11,13 +11,21 @@ const transactionSchema = {
     }
 }
 
-const createTransaction = (request) => ({
-    payee_name: request.body.merchant,
-    amount: -Math.abs(Math.round(request.body.amount * 100)),
-    cleared: false,
-    date: new Date(),
-    imported_id: `${new Date().getTime()}`,
-});
+const createTransaction = (request) => {
+    const merchant = request.body.merchant || process.env.ACTUAL_BACKUP_PAYEE;
+    if(!merchant) {
+        throw new Error('No merchant provided and no default merchant set');
+    }
+
+    return {
+        payee_name: merchant,
+        amount: -Math.abs(Math.round(request.body.amount * 100)),
+        cleared: false,
+        date: new Date(),
+        imported_id: `${new Date().getTime()}`,
+    }
+    
+};
 
 const handleTransactionResult = (result, transaction, reply, log) => {
     if (result && result.errors) {
@@ -46,7 +54,11 @@ module.exports = async (fastify, opts) => {
             handleTransactionResult(result, transaction, reply, fastify.log);
         } catch (err) {
             fastify.log.error(`Error importing transaction: ${err.message}`);
-            reply.code(500).send({ error: 'Failed to import transaction', message: err.message });
+            if(err.message === 'No merchant provided and no default merchant set') {
+                reply.code(400).send({ error: 'No merchant provided and no default merchant set' });
+            } else {
+                reply.code(500).send({ error: 'Failed to import transaction', message: err.message });
+            }
         }
     });
 };
