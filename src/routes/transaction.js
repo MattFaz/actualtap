@@ -1,20 +1,20 @@
 const transactionSchema = {
     schema: {
         body: {
-            type: 'object',
-            required: ['amount'],
+            type: "object",
+            required: ["amount"],
             properties: {
-                merchant: { type: 'string', minLength: 1 },
-                amount: { type: 'number' }
-            }
-        }
-    }
-}
+                merchant: { type: "string", minLength: 1 },
+                amount: { type: "number" },
+            },
+        },
+    },
+};
 
 const createTransaction = (request) => {
     const merchant = request.body.merchant || process.env.ACTUAL_BACKUP_PAYEE;
-    if(!merchant) {
-        throw new Error('No merchant provided and no default merchant set');
+    if (!merchant) {
+        throw new Error("No merchant provided and no default merchant set");
     }
 
     return {
@@ -23,8 +23,7 @@ const createTransaction = (request) => {
         cleared: false,
         date: new Date(),
         imported_id: `${new Date().getTime()}`,
-    }
-    
+    };
 };
 
 const handleTransactionResult = (result, transaction, reply, log) => {
@@ -38,26 +37,45 @@ const handleTransactionResult = (result, transaction, reply, log) => {
     } else if (result && result.updated && result.updated.length > 0) {
         log.info(`Transaction updated: ${JSON.stringify(result.updated[0])}`);
         transaction.actual_id = result.updated[0];
-        reply.send(transaction);    
+        reply.send(transaction);
     } else {
-        log.error('Unexpected error: No result from addTransactions');
-        reply.code(500).send({ message: 'Unknown error' });
+        log.error("Unexpected error: No result from addTransactions");
+        reply.code(500).send({ message: "Unknown error" });
     }
-}
+};
 
 module.exports = async (fastify, opts) => {
-    fastify.post('/transaction', transactionSchema, async (request, reply) => {
-        request.log.info(`Received transaction request with body: ${JSON.stringify(request.body)}`);
+    fastify.post("/transaction", transactionSchema, async (request, reply) => {
+        request.log.info(
+            `Received transaction request with body: ${JSON.stringify(
+                request.body
+            )}`
+        );
         try {
             const transaction = createTransaction(request);
-            const result = await fastify.actual.importTransactions(process.env.ACTUAL_DEFAULT_ACCOUNT_ID, [transaction]);
+            const result = await fastify.actual.importTransactions(
+                process.env.ACTUAL_DEFAULT_ACCOUNT_ID,
+                [transaction]
+            );
             handleTransactionResult(result, transaction, reply, fastify.log);
         } catch (err) {
             fastify.log.error(`Error importing transaction: ${err.message}`);
-            if(err.message === 'No merchant provided and no default merchant set') {
-                reply.code(400).send({ error: 'No merchant provided and no default merchant set' });
+            if (
+                err.message ===
+                "No merchant provided and no default merchant set"
+            ) {
+                reply
+                    .code(400)
+                    .send({
+                        error: "No merchant provided and no default merchant set",
+                    });
             } else {
-                reply.code(500).send({ error: 'Failed to import transaction', message: err.message });
+                reply
+                    .code(500)
+                    .send({
+                        error: "Failed to import transaction",
+                        message: err.message,
+                    });
             }
         }
     });
