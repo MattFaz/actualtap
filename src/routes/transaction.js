@@ -4,7 +4,6 @@ const transactionSchema = {
             type: "object",
             required: ["amount"],
             properties: {
-                merchant: { type: "string", minLength: 1 },
                 amount: { type: "number" },
             },
         },
@@ -64,18 +63,14 @@ module.exports = async (fastify, opts) => {
                 err.message ===
                 "No merchant provided and no default merchant set"
             ) {
-                reply
-                    .code(400)
-                    .send({
-                        error: "No merchant provided and no default merchant set",
-                    });
+                reply.code(400).send({
+                    error: "No merchant provided and no default merchant set",
+                });
             } else {
-                reply
-                    .code(500)
-                    .send({
-                        error: "Failed to import transaction",
-                        message: err.message,
-                    });
+                reply.code(500).send({
+                    error: "Failed to import transaction",
+                    message: err.message,
+                });
             }
         }
     });
