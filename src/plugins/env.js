@@ -13,6 +13,7 @@ const schema = {
         "ACTUAL_PASSWORD",
         "ACTUAL_BUDGET_ID",
         "ACTUAL_DEFAULT_ACCOUNT_ID",
+        "ACTUAL_BACKUP_PAYEE",
     ],
     properties: {
         API_KEY: { type: "string" },
@@ -20,6 +21,7 @@ const schema = {
         ACTUAL_PASSWORD: { type: "string" },
         ACTUAL_BUDGET_ID: { type: "string" },
         ACTUAL_DEFAULT_ACCOUNT_ID: { type: "string" },
+        ACTUAL_BACKUP_PAYEE: { type: "string" },
     },
 };
 

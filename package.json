@@ -20,6 +20,6 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon --ignore ./data/ node src/server.js"
+    "dev": "nodemon --ignore ./data/ --ignore ./bruno/ node src/server.js"
   }
 }

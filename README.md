@@ -51,14 +51,14 @@ Both will need to ensure they have the following environment variables:
 
 -   **Note:** Do not edit the `NODE_ENV` variable, leave it as its default
 
-| **Variable**                | **Example**                          | **Comment**                                                                                                                                                                                                                 |
-| --------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `API_KEY`                   | 527D6AAA-B22A-4D48-9DC8-C203139E5531 | Unique Id                                                                                                                                                                                                                   |
-| `ACTUAL_URL`                | https://actual.yourdomain.com        | URL to Actual Budget Server                                                                                                                                                                                                 |
-| `ACTUAL_PASSWORD`           | superSecretPassword                  | Password for your Actual Budget Server                                                                                                                                                                                      |
-| `ACTUAL_BUDGET_ID`          | 8B51B58D-3A0D-4B5B-A41F-DE574306A4F2 | The Unique Id of your Budget                                                                                                                                                                                                |
-| `ACTUAL_DEFAULT_ACCOUNT_ID` | 8AF657D4-4811-42C7-8272-E299A8DAC43A | The Unique Id of an account you want transactions to default too                                                                                                                                                            |
-| `ACTUAL_BACKUP_PAYEE`       | Unknown                              | If the Merchant name is missing, but the Amount still has a value, a transaction can be created with this as the payee name _(note: if this is not provided a transaction will not be created if merchant name is missing)_ |
+| **Variable**                | **Example**                          | **Comment**                                                                                                                 |
+| --------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `API_KEY`                   | 527D6AAA-B22A-4D48-9DC8-C203139E5531 | Unique Id                                                                                                                   |
+| `ACTUAL_URL`                | https://actual.yourdomain.com        | URL to Actual Budget Server                                                                                                 |
+| `ACTUAL_PASSWORD`           | superSecretPassword                  | Password for your Actual Budget Server                                                                                      |
+| `ACTUAL_BUDGET_ID`          | 8B51B58D-3A0D-4B5B-A41F-DE574306A4F2 | The Unique Id of your Budget                                                                                                |
+| `ACTUAL_DEFAULT_ACCOUNT_ID` | 8AF657D4-4811-42C7-8272-E299A8DAC43A | The Unique Id of an account you want transactions to default too                                                            |
+| `ACTUAL_BACKUP_PAYEE`       | Unknown                              | If the Merchant name is missing, but the Amount still has a value, a transaction can be created with this as the payee name |
 
 The app will be running on port `3001`
 

@@ -2,25 +2,27 @@ const transactionSchema = {
     schema: {
         body: {
             type: "object",
-            required: ["amount"],
             properties: {
-                amount: { type: "number" },
+                amount: { type: "number", minimum: 0.01 },
+                merchant: { type: "string" },
             },
+            anyOf: [{ required: ["merchant"] }, { required: ["amount"] }],
         },
     },
 };
 
 const createTransaction = (request) => {
-    const merchant = request.body.merchant || process.env.ACTUAL_BACKUP_PAYEE;
-    if (!merchant) {
-        throw new Error("No merchant provided and no default merchant set");
-    }
+    const { merchant, amount } = request.body;
+
+    const payee_name = merchant || process.env.ACTUAL_BACKUP_PAYEE;
+    const transactionAmount =
+        amount !== undefined ? -Math.round(amount * 100) : 0;
 
     return {
-        payee_name: merchant,
-        amount: -Math.abs(Math.round(request.body.amount * 100)),
+        payee_name,
+        amount: transactionAmount,
         cleared: false,
-        date: new Date(),
+        date: new Date().toISOString().split("T")[0],
         imported_id: `${new Date().getTime()}`,
     };
 };
@@ -59,19 +61,10 @@ module.exports = async (fastify, opts) => {
             handleTransactionResult(result, transaction, reply, fastify.log);
         } catch (err) {
             fastify.log.error(`Error importing transaction: ${err.message}`);
-            if (
-                err.message ===
-                "No merchant provided and no default merchant set"
-            ) {
-                reply.code(400).send({
-                    error: "No merchant provided and no default merchant set",
-                });
-            } else {
-                reply.code(500).send({
-                    error: "Failed to import transaction",
-                    message: err.message,
-                });
-            }
+            reply.code(400).send({
+                error: "Faield to import transaction",
+                message: err.message,
+            });
         }
     });
 };
