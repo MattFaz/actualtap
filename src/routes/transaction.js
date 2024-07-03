@@ -3,7 +3,7 @@ const transactionSchema = {
         body: {
             type: "object",
             properties: {
-                amount: { type: "number", minimum: 0.01 },
+                amount: { type: "number", minimum: 0 },
                 merchant: { type: "string" },
             },
             anyOf: [{ required: ["merchant"] }, { required: ["amount"] }],
