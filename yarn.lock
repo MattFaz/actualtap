@@ -2,18 +2,18 @@
 # yarn lockfile v1
 
 
-"@actual-app/api@^6.8.0":
-  version "6.8.0"
-  resolved "https://registry.yarnpkg.com/@actual-app/api/-/api-6.8.0.tgz#4ab728c608703425f265c3c8a70ad8107f5ad74d"
-  integrity sha512-ZYCsNiAR5rmZ1v+w3zaS5HQF8r1mwf9hT2ABtLq1XrG069bAFnuzhXu2DFYBUs6YzpX/oSR7tuJVIjJ+19092g==
+"@actual-app/api@^6.8.2":
+  version "6.8.2"
+  resolved "https://registry.yarnpkg.com/@actual-app/api/-/api-6.8.2.tgz#827b79986cb4ea5856eb7f4b2e32f5ec1b8b1e96"
+  integrity sha512-BI9Zqip6eBRwmgQjDgXHpPSIJYsbm6e+Yyyvj9sNRn9GbWZr7WXsA8SySlIOZH/8EsA6DpS7CIW0RfOMWuLEcg==
   dependencies:
-    "@actual-app/crdt" "workspace:^"
+    "@actual-app/crdt" "^2.1.0"
     better-sqlite3 "^9.6.0"
     compare-versions "^6.1.0"
     node-fetch "^3.3.2"
     uuid "^9.0.1"
 
-"@actual-app/crdt@workspace:^":
+"@actual-app/crdt@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@actual-app/crdt/-/crdt-2.1.0.tgz#92ad965406b6772483edc4441a57292caa503225"
   integrity sha512-Qb8hMq10Wi2kYIDj0fG4uy00f9Mloghd+xQrHQiPQfgx022VPJ/No+z/bmfj4MuFH8FrPiLysSzRsj2PNQIedw==
@@ -214,9 +214,9 @@ chownr@^1.1.1:
   integrity sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==
 
 compare-versions@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-6.1.0.tgz#3f2131e3ae93577df111dba133e6db876ffe127a"
-  integrity sha512-LNZQXhqUvqUTotpZ00qLSaify3b4VFD588aRr8MKFw4CMUr98ytzCW5wDH5qx/DEY5kCDXcbcRuCqL0szEf2tg==
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-6.1.1.tgz#7af3cc1099ba37d244b3145a9af5201b629148a9"
+  integrity sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg==
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -441,9 +441,9 @@ glob-parent@~5.1.2:
     is-glob "^4.0.1"
 
 google-protobuf@^3.12.0-rc.1:
-  version "3.21.2"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.21.2.tgz#4580a2bea8bbb291ee579d1fefb14d6fa3070ea4"
-  integrity sha512-3MSOYFO5U9mPGikIYCzK0SaThypfGgS6bHqrUGXG3DPHCrb+txNqeEcns1W0lkGfk0rCyNXm7xB9rMxnCiZOoA==
+  version "3.21.4"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.21.4.tgz#2f933e8b6e5e9f8edde66b7be0024b68f77da6c9"
+  integrity sha512-MnG7N936zcKTco4Jd2PX2U96Kf9PxygAPKBug+74LHzmHXmceN16MmRcdgZv+DGef/S9YvQAfRsNCn4cjf9yyQ==
 
 has-flag@^3.0.0:
   version "3.0.0"
@@ -565,9 +565,9 @@ napi-build-utils@^1.0.1:
   integrity sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==
 
 node-abi@^3.3.0:
-  version "3.63.0"
-  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-3.63.0.tgz#9bfbe68b87357f8b508554608b323e9b1052d045"
-  integrity sha512-vAszCsOUrUxjGAmdnM/pq7gUgie0IRteCQMX6d4A534fQCR93EJU5qgzBvU6EkFfK27s0T3HEV3BOyJIr7OMYw==
+  version "3.65.0"
+  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-3.65.0.tgz#ca92d559388e1e9cab1680a18c1a18757cdac9d3"
+  integrity sha512-ThjYBfoDNr08AWx6hGaRbfPwxKV9kVzAzOzlLKbk2CuqXE2xnCh+cbAGnwM3t8Lq4v9rUB7VfondlkBckcJrVA==
   dependencies:
     semver "^7.3.5"
 
@@ -801,7 +801,12 @@ secure-json-parse@^2.7.0:
   resolved "https://registry.yarnpkg.com/secure-json-parse/-/secure-json-parse-2.7.0.tgz#5a5f9cd6ae47df23dba3151edd06855d47e09862"
   integrity sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==
 
-semver@^7.3.5, semver@^7.5.3, semver@^7.5.4:
+semver@^7.3.5:
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.3.tgz#980f7b5550bc175fb4dc09403085627f9eb33143"
+  integrity sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==
+
+semver@^7.5.3, semver@^7.5.4:
   version "7.6.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
   integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
