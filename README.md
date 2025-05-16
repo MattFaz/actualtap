@@ -1,4 +1,4 @@
-<h1 align="center">Actual Tap</h1>
+# Actual Tap
 
 <p align="center">
     <img src="images/logo.webp" width="200" height="200">
@@ -6,61 +6,107 @@
     <i>Automatically create transactions in <a href="https://github.com/actualbudget/actual">Actual Budget</a> when you use Tap-to-Pay on a mobile device</i>
 </p>
 
-## Contents
+## Overview
 
--   [Overview](#overview)
--   [Run the App](#run-the-app)
--   [iOS Setup](#ios-setup)
--   [Android Setup](#android-setup)
--   [Caddy](#caddy)
+Actual Tap bridges the gap between mobile payments and your Actual Budget, making expense tracking seamless and automatic. When you tap to pay with your mobile device, Actual Tap receives the transaction details and automatically creates the corresponding entry in your Actual Budget.
 
-# Overview
+## Key Features
 
-Actual Tap is a Fastify API that utilises the Actual Budget API Client to create transactions.
+- 🚀 Fast and lightweight Fastify API
+- 💳 Automatic transaction creation from Tap-to-Pay
+- 📱 Mobile automation support (iOS Shortcuts & Android Tasker)
+    - [iOS Shortcut](xxx)
+- 🔒 Secure API key authentication
+- 🐳 Easy deployment with Docker
+- 🔄 Real-time transaction syncing with Actual Budget
 
-The primary purpose of Actual Tap is receive a POST request from mobile devices _(.e.g iOS Shortcuts)_ when a Tap to Pay transaction is made. Once the POST request is received Actual Tap will POST the Name and Amount to Actual Budget.
+## How It Works
 
-Ideal flow:
+Actual Tap is a Fastify API that utilizes the Actual Budget API Client to create transactions. Here's the ideal flow:
 
 1. Mobile device is tapped to make a purchase
 2. Automation on mobile device is triggered
-    - Recommedned apps are [Shortcuts](https://apps.apple.com/us/app/shortcuts/id915249334) (iOS) or [Tasker](https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm&pcampaignid=web_share) (Android)
-3. POST request containing transaction information _(merchant & amount)_ is sent to Actual Tap
+    - Recommended apps are [Shortcuts](https://apps.apple.com/us/app/shortcuts/id915249334) (iOS) or [Tasker](https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm) (Android)
+3. POST request containing transaction information (merchant & amount) is sent to Actual Tap
 4. Actual Tap creates the transaction in Actual Budget
 
 <p align="center">
     <img src="images/flow.png">
 </p>
 
-**Notes:** This is in active / heavy development, issues, pull requests, feature requests etc. are welcome.
+## Setup and Installation
 
----
+### Running with Docker
 
-## Running the App
+#### Docker CLI
 
-To run Actual Tap locally _(i.e. for development or not containerised)_:
+```bash
+docker run -p 3001:3001 \
+  -e ACTUAL_URL=your_actual_url \
+  -e ACTUAL_PASSWORD=your_password \
+  -e ACTUAL_BUDGET_ID=your_budget_id \
+  -e API_KEY=your_api_key \
+  mattyfaz/actualtap
+```
+#### Docker Compose
 
--   `$ cp .env.sample .env`
--   Edit the `.env` file accordingly
+```yml
+services:
+  actualtap:
+    container_name: actualtap 
+    image: mattyfaz/actualtap:latest
+    restart: always
+    ports:
+      - 3001:3001
+    volumes:
+      - /your/path/here:/app/data
+    environment:
+      - ACTUAL_URL=
+      - ACTUAL_PASSWORD=
+      - ACTUAL_BUDGET_ID=
+      - API_KEY=
+```
 
-To run Actual Tap in docker ensure you edit variables in the `docker-compose.yml` file.
+### Environment Variables
 
--   **Note:** You will also need to update the volumes path
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `API_KEY` | 527D6AAA-B22A-4D48-9DC8-C203139E5531 | Unique API key for authentication (generate with [uuidgenerator.net](https://www.uuidgenerator.net)) |
+| `ACTUAL_URL` | https://actual.yourdomain.com | URL to Actual Budget Server |
+| `ACTUAL_PASSWORD` | superSecretPassword | Password for your Actual Budget Server |
+| `ACTUAL_BUDGET_ID` | 8B51B58D-3A0D-4B5B-A41F-DE574306A4F2 | The Unique ID of your Budget |
 
-Both will need to ensure they have the following environment variables:
+### Local Development
 
--   **Note:** Do not edit the `NODE_ENV` variable, leave it as its default
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/MattFaz/actualtap.git
+   cd actualtap
+   ```
 
-| **Variable**                | **Example**                          | **Comment**                                                                                                                 |
-| --------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| `API_KEY`                   | 527D6AAA-B22A-4D48-9DC8-C203139E5531 | Unique Id                                                                                                                   |
-| `ACTUAL_URL`                | https://actual.yourdomain.com        | URL to Actual Budget Server                                                                                                 |
-| `ACTUAL_PASSWORD`           | superSecretPassword                  | Password for your Actual Budget Server                                                                                      |
-| `ACTUAL_BUDGET_ID`          | 8B51B58D-3A0D-4B5B-A41F-DE574306A4F2 | The Unique Id of your Budget                                                                                                |
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The app will be running on port `3001`
+3. Set up your environment variables in your terminal:
+   ```bash
+   export API_KEY="your-api-key"
+   export ACTUAL_URL="your-actual-url"
+   export ACTUAL_PASSWORD="your-password"
+   export ACTUAL_BUDGET_ID="your-budget-id"
+   ```
 
-## iOS Setup
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+The app will run on port `3001` by default.
+
+## Mobile Setup
+
+### iOS Setup
 
 1. Open Shortcuts app
 2. Select Automations
@@ -75,6 +121,10 @@ The app will be running on port `3001`
         - Headers = `{ X-API-KEY: <your_api_key>}`
         - Body = JSON `{ merchant: <merchant_variable>, amount: <numbers_variable>, accountName: <exact_account_name> }`
 
-## Android Setup
+### Android Setup
 
 TBC
+
+---
+
+**Note:** This project is in active development. Issues, pull requests, and feature requests are welcome.

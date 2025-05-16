@@ -1,15 +1,14 @@
 services:
   actualtap:
     container_name: actualtap
-    build: .
+    image: mattyfaz/actualtap:latest
     ports:
       - 3001:3001
     environment:
-      - NODE_ENV=production
-      - API_KEY=
       - ACTUAL_URL=
       - ACTUAL_PASSWORD=
       - ACTUAL_BUDGET_ID=
+      - API_KEY=
     volumes:
       - /your/path/here:/app/data
     network_mode: bridge

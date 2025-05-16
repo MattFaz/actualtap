@@ -1,10 +1,5 @@
 const fastifyEnv = require("@fastify/env");
 
-// Conditionally load .env only in development environments
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
 const schema = {
   type: "object",
   required: ["API_KEY", "ACTUAL_URL", "ACTUAL_PASSWORD", "ACTUAL_BUDGET_ID"],
