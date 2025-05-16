@@ -10,7 +10,6 @@ services:
       - ACTUAL_URL=
       - ACTUAL_PASSWORD=
       - ACTUAL_BUDGET_ID=
-      - ACTUAL_DEFAULT_ACCOUNT_ID=
-      - ACTUAL_BACKUP_PAYEE=
     volumes:
       - /your/path/here:/app/data
+    network_mode: bridge

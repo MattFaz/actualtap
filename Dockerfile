@@ -1,17 +1,14 @@
 # use node alpine image as build image
 FROM node:lts-alpine
 
-# Install Yarn
-RUN apk add --no-cache yarn
-
 # create work directory in app folder
 WORKDIR /app
 
 # copy over files
-COPY package.json yarn.lock /app/
+COPY package.json package-lock.json* /app/
 
 # install all dependencies
-RUN yarn install --frozen-lockfile
+RUN npm ci
 
 # copy over all files to the work directory
 ADD ./src /app
