@@ -38,14 +38,35 @@ Actual Tap is a Fastify API that utilizes the Actual Budget API Client to create
 
 ### Running with Docker
 
+#### Docker CLI
+
 ```bash
 docker run -p 3001:3001 \
-  -e API_KEY=your_api_key \
   -e ACTUAL_URL=your_actual_url \
   -e ACTUAL_PASSWORD=your_password \
   -e ACTUAL_BUDGET_ID=your_budget_id \
+  -e API_KEY=your_api_key \
   mattyfaz/actualtap
 ```
+#### Docker Compose
+
+```yml
+services:
+  actualtap:
+    container_name: actualtap 
+    image: mattyfaz/actualtap:latest
+    restart: always
+    ports:
+      - 3001:3001
+    volumes:
+      - /your/path/here:/app/data
+    environment:
+      - ACTUAL_URL=
+      - ACTUAL_PASSWORD=
+      - ACTUAL_BUDGET_ID=
+      - API_KEY=
+```
+
 ### Environment Variables
 
 | Variable | Example | Description |
@@ -57,12 +78,31 @@ docker run -p 3001:3001 \
 
 ### Local Development
 
-1. Copy the environment file:
+1. Clone the repository:
    ```bash
-   cp .env.sample .env
+   git clone https://github.com/MattFaz/actualtap.git
+   cd actualtap
    ```
-2. Edit the `.env` file with your configuration
-3. The app will run on port `3001`
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up your environment variables in your terminal:
+   ```bash
+   export API_KEY="your-api-key"
+   export ACTUAL_URL="your-actual-url"
+   export ACTUAL_PASSWORD="your-password"
+   export ACTUAL_BUDGET_ID="your-budget-id"
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+The app will run on port `3001` by default.
 
 ## Mobile Setup
 
