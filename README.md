@@ -112,7 +112,7 @@ The app will run on port `3001` by default.
 
 Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to trigger the Shortcut upon tapping your iOS device to pay.
 
-Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/11f94f4ee41f446aa6ee5db0b7a68663
+Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/03b388d99a114496827b4964e0988a1f
 
 You do not nee to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
 
@@ -141,6 +141,18 @@ You do not nee to make any edits to the Shortcut. Once added, follow the below s
 
 TBC
 
+## Caddy
+
+Actual Tap was developed with Mobile Tap-to-Pay as the main use case. In order for that to function Actual Tap needs to be exposed to the internet. Below is a standard Caddyfile configuration:
+```
+actualtap.yourdomain.com {
+    @auth header X-API-KEY your-api-key
+    handle @auth {
+        reverse_proxy 0.0.0.0:3001
+    }
+    respond 401
+}
+```
 ---
 
 **Note:** This project is in active development. Issues, pull requests, and feature requests are welcome.
