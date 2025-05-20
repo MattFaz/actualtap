@@ -106,20 +106,36 @@ The app will run on port `3001` by default.
 
 ## Mobile Setup
 
+**Note**: Mobile setup requires ActualTap container running and publicly accessible via URL.
+
 ### iOS Setup
 
-1. Open Shortcuts app
-2. Select Automations
-3. Create new Automation to Run Immediately
-4. When:
-    - I tap any of x Wallet passes or payment cards
-5. Do:
-    - Receive transaction as input
-    - Get numbers from Amount (_transaction variable_)
-    - Get contents of URL:
-        - URL = _your subdomain_
-        - Headers = `{ X-API-KEY: <your_api_key>}`
-        - Body = JSON `{ merchant: <merchant_variable>, amount: <numbers_variable>, accountName: <exact_account_name> }`
+Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to trigger the Shortcut upon tapping your iOS device to pay.
+
+Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/11f94f4ee41f446aa6ee5db0b7a68663
+
+You do not nee to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
+
+<img src="images/automation.png" height="350">
+
+1. Open Shortcuts app, select *'Automations'*, then *'+'* to create a new Automation
+2. Tap *'Transaction'* and Enable relevant Card, all Categories, then select *'Run Immediately'*
+    - Do **not** enable *'Notify When Run'*
+3. Select *'New Blank Automation'*, then Search & add *'Dictionary'*
+    - Add the values below to Dictionary:
+
+      | Item | Type | Value |
+      | - | - | - |
+      | URL |Text|https://actualtap.yourdomain.com|
+      | API_KEY |Text|*api_key used when setting up ActualTap*|
+      | Account | Text | *exact name of Account in Actual Budget* |
+      | Merchant | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Merchant* |
+      | Name | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Name* |
+      | Amount | Number |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
+
+4. Search & tap on *'Run Shortcut'*
+5. Tap *'Shortcut'* and select *'ActualTap'*
+6. Tap the *'>'* to expand the action, and change *'Input'* value to *'Dictionary'*
 
 ### Android Setup
 
