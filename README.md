@@ -27,12 +27,41 @@ Actual Tap is a Fastify API that utilizes the Actual Budget API Client to create
 1. Mobile device is tapped to make a purchase
 2. Automation on mobile device is triggered
     - Recommended apps are [Shortcuts](https://apps.apple.com/us/app/shortcuts/id915249334) (iOS) or [Tasker](https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm) (Android)
-3. POST request containing transaction information (merchant & amount) is sent to Actual Tap
+3. POST request containing transaction information is sent to Actual Tap
 4. Actual Tap creates the transaction in Actual Budget
 
 <p align="center">
     <img src="images/flow.png">
 </p>
+
+## API Request Format
+
+### Headers
+```
+X-API-KEY: your-api-key
+Content-Type: application/json
+```
+
+### Request Body
+```json
+{
+  "account": "Checking",  // Required: Name of the account in Actual Budget
+  "amount": 10.50,       // Optional: Transaction amount (defaults to 0)
+  "payee": "Starbucks"   // Optional: Name of the payee (defaults to "Unknown")
+}
+```
+
+### Example cURL
+```bash
+curl -X POST https://actualtap.yourdomain.com/transaction \
+  -H "X-API-KEY: your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "account": "Checking",
+    "amount": 10.50,
+    "payee": "Starbucks"
+  }'
+```
 
 ## Setup and Installation
 
