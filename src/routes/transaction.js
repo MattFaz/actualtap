@@ -4,20 +4,20 @@ const transactionSchema = {
       type: "object",
       properties: {
         amount: { type: "number", minimum: 0, default: 0 },
-        merchant: { type: "string", default: "Unknown" },
-        accountName: { type: "string" },
+        payee: { type: "string", default: "Unknown" },
+        account: { type: "string" },
       },
-      required: ["accountName"],
+      required: ["account"],
     },
   },
 };
 
 const createTransaction = (request) => {
-  const { merchant, amount } = request.body;
+  const { payee, amount } = request.body;
   const transactionAmount = amount !== undefined ? -Math.round(amount * 100) : 0;
 
   return {
-    payee_name: merchant || "Unknown",
+    payee_name: payee || "Unknown",
     amount: transactionAmount,
     date: new Date().toISOString().split("T")[0],
     imported_id: `${new Date().getTime()}`,
@@ -57,7 +57,7 @@ module.exports = async (fastify, opts) => {
     request.log.info(`Received transaction request with body: ${JSON.stringify(request.body)}`);
     try {
       const transaction = createTransaction(request);
-      const accountName = request.body.accountName;
+      const accountName = request.body.account;
       const { accountId, accounts } = await getAccountId(fastify, accountName);
 
       if (!accountId) {
