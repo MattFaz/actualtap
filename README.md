@@ -15,7 +15,7 @@ Actual Tap bridges the gap between mobile payments and your Actual Budget, makin
 - 🚀 Fast and lightweight Fastify API
 - 💳 Automatic transaction creation from Tap-to-Pay
 - 📱 Mobile automation support (iOS Shortcuts & Android Tasker)
-    - [iOS Shortcut](xxx)
+    - [iOS Shortcut](#ios-setup)
 - 🔒 Secure API key authentication
 - 🐳 Easy deployment with Docker
 - 🔄 Real-time transaction syncing with Actual Budget
@@ -141,7 +141,7 @@ The app will run on port `3001` by default.
 
 Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to trigger the Shortcut upon tapping your iOS device to pay.
 
-Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/03b388d99a114496827b4964e0988a1f
+Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/ba203b023bf54b1c909bfc3732e3b96d
 
 You do not nee to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
 
