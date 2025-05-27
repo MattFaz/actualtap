@@ -5,3 +5,4 @@ node_modules/
 !.gitkeep
 .DS_Store
 /bruno/environments/*
+local_test.sh

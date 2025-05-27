@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 const transactionSchema = {
   schema: {
     body: {
@@ -16,11 +18,14 @@ const createTransaction = (request) => {
   const { payee, amount } = request.body;
   const transactionAmount = amount !== undefined ? -Math.round(amount * 100) : 0;
 
+  // Generate a UUID v4 using the crypto module
+  const uuid = crypto.randomUUID();
+
   return {
     payee_name: payee || "Unknown",
     amount: transactionAmount,
     date: new Date().toISOString().split("T")[0],
-    imported_id: `${new Date().getTime()}`,
+    imported_id: `tap-${uuid}`,
     cleared: false,
   };
 };
@@ -48,10 +53,27 @@ const handleTransactionResult = (result, transaction, reply, log) => {
     return reply.send(transaction);
   }
 
+  // Check for ignored transactions in updatedPreview
+  if (result.updatedPreview?.length > 0) {
+    const ignoredTransactions = result.updatedPreview.filter((item) => item.ignored === true);
+    if (ignoredTransactions.length > 0) {
+      log.warn(`Transaction was ignored: ${JSON.stringify(ignoredTransactions)}`);
+      return reply.code(409).send({
+        message: "Transaction was ignored by Actual Budget",
+        ignored: true,
+        transaction: transaction,
+      });
+    }
+  }
+
   log.error("Unexpected error: No transactions were added");
   log.error("Raw result object:", result);
   log.error("Stringified result:", JSON.stringify(result, null, 2));
-  return reply.code(500).send({ message: "No transactions were added" });
+  log.error("Result type:", typeof result);
+  if (result) {
+    log.error("Result keys:", Object.keys(result));
+  }
+  return reply.code(500).send({ message: "No transactions were added", debug: typeof result });
 };
 
 module.exports = async (fastify, opts) => {
