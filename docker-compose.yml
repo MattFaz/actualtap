@@ -5,6 +5,7 @@ services:
     ports:
       - 3001:3001
     environment:
+      - TZ=
       - ACTUAL_URL=
       - ACTUAL_PASSWORD=
       - ACTUAL_BUDGET_ID=

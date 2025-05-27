@@ -19,13 +19,13 @@ const createTransaction = (request) => {
   const transactionAmount = amount !== undefined ? -Math.round(amount * 100) : 0;
 
   // Generate a UUID v4 using the crypto module
-  const uuid = crypto.randomUUID();
+  // const uuid = crypto.randomUUID();
 
   return {
     payee_name: payee || "Unknown",
     amount: transactionAmount,
     date: new Date().toISOString().split("T")[0],
-    imported_id: `tap-${uuid}`,
+    // imported_id: `tap-${uuid}`,
     cleared: false,
   };
 };
@@ -37,37 +37,26 @@ const getAccountId = async (fastify, accountName) => {
 };
 
 const handleTransactionResult = (result, transaction, reply, log) => {
+  log.info("Result:", result);
+
+  // addTransactions returns "ok" when successful
+  if (result === "ok") {
+    log.info("Transaction added successfully");
+    return reply.send(transaction);
+  }
+
   if (!result) {
-    log.error("No result from importTransactions");
+    log.error("No result from addTransactions");
     return reply.code(500).send({ message: "Unknown error" });
   }
 
+  // Handle error cases - check if result has error properties
   if (result.errors?.length > 0) {
     log.error(`Error adding transaction: ${result.errors}`);
     return reply.code(500).send({ message: result.errors });
   }
 
-  if (result.added?.length > 0) {
-    log.info(`Transaction added with ID: ${result.added[0]}`);
-    transaction.actualId = result.added[0];
-    return reply.send(transaction);
-  }
-
-  // Check for ignored transactions in updatedPreview
-  if (result.updatedPreview?.length > 0) {
-    const ignoredTransactions = result.updatedPreview.filter((item) => item.ignored === true);
-    if (ignoredTransactions.length > 0) {
-      log.warn(`Transaction was ignored: ${JSON.stringify(ignoredTransactions)}`);
-      return reply.code(409).send({
-        message: "Transaction was ignored by Actual Budget",
-        ignored: true,
-        transaction: transaction,
-      });
-    }
-  }
-
   log.error("Unexpected error: No transactions were added");
-  log.error("Raw result object:", result);
   return reply.code(500).send({ message: "No transactions were added", debug: typeof result });
 };
 
@@ -87,7 +76,8 @@ module.exports = async (fastify, opts) => {
         return;
       }
 
-      const result = await fastify.actual.importTransactions(accountId, [transaction]);
+      // const result = await fastify.actual.importTransactions(accountId, [transaction]);
+      const result = await fastify.actual.addTransactions(accountId, [transaction]);
       handleTransactionResult(result, transaction, reply, fastify.log);
     } catch (err) {
       fastify.log.error(`Error importing transaction: ${err.message}`);

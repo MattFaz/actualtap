@@ -90,6 +90,7 @@ services:
     volumes:
       - /your/path/here:/app/data
     environment:
+      - TZ=
       - ACTUAL_URL=
       - ACTUAL_PASSWORD=
       - ACTUAL_BUDGET_ID=
