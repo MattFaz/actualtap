@@ -68,11 +68,6 @@ const handleTransactionResult = (result, transaction, reply, log) => {
 
   log.error("Unexpected error: No transactions were added");
   log.error("Raw result object:", result);
-  log.error("Stringified result:", JSON.stringify(result, null, 2));
-  log.error("Result type:", typeof result);
-  if (result) {
-    log.error("Result keys:", Object.keys(result));
-  }
   return reply.code(500).send({ message: "No transactions were added", debug: typeof result });
 };
 
