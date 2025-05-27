@@ -1,5 +1,3 @@
-const crypto = require("crypto");
-
 const transactionSchema = {
   schema: {
     body: {
@@ -18,14 +16,10 @@ const createTransaction = (request) => {
   const { payee, amount } = request.body;
   const transactionAmount = amount !== undefined ? -Math.round(amount * 100) : 0;
 
-  // Generate a UUID v4 using the crypto module
-  // const uuid = crypto.randomUUID();
-
   return {
     payee_name: payee || "Unknown",
     amount: transactionAmount,
     date: new Date().toISOString().split("T")[0],
-    // imported_id: `tap-${uuid}`,
     cleared: false,
   };
 };
