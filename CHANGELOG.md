@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.0.5
+
+### Changed
+- Updated transaction handling from `importTransactions()` to `addTransactions()` for better API compatibility
+- Simplified transaction creation by removing UUID generation and imported_id field
+- Updated response handling to properly handle "ok" return value from addTransactions API
+
+### Added
+- TZ environment variable to Docker configuration for timezone support
+
+### Fixed
+- Fixed 500 error when transactions were successfully added due to incorrect response format handling
+
 ## v1.0.4
 
 ### Fixed
