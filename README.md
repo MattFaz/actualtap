@@ -176,25 +176,25 @@ The free version of Automate allows 30 blocks to be run at once with full capabi
 <img src="images/automate-wallet to actualtap.png" height=950>
 
 1. Download the flo for Automate. https://llamalab.com/automate/community/flows/50847
-  - This can be searched for within the Automate app on your mobile device.
+    - This can be searched for within the Automate app on your mobile device.
 2. Edit the "HTTP request" block
-  - Update the Request URL to your actualtap address
-  - Update your default account in the Request content body.  This should match an account name in your ActualBudget.
-  - Update your API key for your actualtap deployment
+    - Update the Request URL to your actualtap address
+    - Update your default account in the Request content body.  This should match an account name in your ActualBudget.
+    - Update your API key for your actualtap deployment
 
 <img src="images/automate-wallet to actualtap-html.png" height=550>
 
 3. Save your changes and start flo.
 
 **Summary of flo**
-- The flo will pause until a new notification appears.
-- If the notification is Google Wallet, proceed.
-- Set two variables.  One for payee and one that contains account and amount information.
-- Get current date
-- Use a REGEX pattern to extract the amount information.
-- Pass the amount, payee, and date information to actualtap using the HTTP request block.
-- If the httprequest was successful, returns 200, remove the notification.
-- If the httprequest failed, leave the notification and return to wait for a new notification.
+  - The flo will pause until a new notification appears.
+  - If the notification is Google Wallet, proceed.
+  - Set two variables.  One for payee and one that contains account and amount information.
+  - Get current date
+  - Use a REGEX pattern to extract the amount information.
+  - Pass the amount, payee, and date information to actualtap using the HTTP request block.
+  - If the httprequest was successful, returns 200, remove the notification.
+  - If the httprequest failed, leave the notification and return to wait for a new notification.
 
 If a request failed, you can change the Notification block to activate "Immediately" to process it.  Then change it back to "When transition"
 
