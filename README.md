@@ -169,6 +169,21 @@ You do not nee to make any edits to the Shortcut. Once added, follow the below s
 
 ### Android Setup
 
+#### Tasker
+
+This method requires the **Notification** addon for Tasker.
+
+1.  Add "+" a task within Tasker, and proceed to Taskernet.
+  - Search for "Wallet to ActualBudget" and import the task.
+    - Import by long pressing on "PROFILES"
+2. Navigate to the "TASKS" tab and edit "Send To ActualTap"
+3. Edit the HTTP Request step
+  - Replace URL with http://{your-actual-tap-address.com}/transaction
+  - Add your API key to HEADERS
+  - Body:
+    - Remove the [ ] brackets.
+    - Change **%account** to your preferred Actual Budget account name
+
 #### Automate by LlammaLabs
 
 The free version of Automate allows 30 blocks to be run at once with full capability.  This flo uses 11 of the 30.
