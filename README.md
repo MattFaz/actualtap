@@ -169,20 +169,22 @@ You do not nee to make any edits to the Shortcut. Once added, follow the below s
 
 ### Android Setup
 
+**Tip:  Rename the card in your Google Wallet to match the account name in Actual Budget.  This will allow you to use the %account variables and use multiple cards with Google Wallet and Actual Budget.**
+
 #### Tasker
 
 This method requires the **Notification** addon for Tasker.
 
 1.  Add "+" a task within Tasker, and proceed to Taskernet.
-  - Search for "Wallet to ActualBudget" and import the task.
-    - Import by long pressing on "PROFILES"
+      - Search for "Wallet to ActualBudget" and import the task.
+        - Import by long pressing on "PROFILES"
 2. Navigate to the "TASKS" tab and edit "Send To ActualTap"
 3. Edit the HTTP Request step
-  - Replace URL with http://{your-actual-tap-address.com}/transaction
-  - Add your API key to HEADERS
-  - Body:
-    - Remove the [ ] brackets.
-    - Change **%account** to your preferred Actual Budget account name
+      - Replace URL with http://{your-actual-tap-address.com}/transaction
+      - Add your API key to HEADERS
+      - Body:
+        - Remove the [ ] brackets.
+        - Change **%account** to your preferred Actual Budget account name
 
 #### Automate by LlammaLabs
 
