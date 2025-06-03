@@ -184,7 +184,6 @@ This method requires the **Notification** addon for Tasker.
       - Add your API key to HEADERS
       - Body:
         - Remove the [ ] brackets.
-        - Change **%account** to your preferred Actual Budget account name
 
 #### Automate by LlammaLabs
 
@@ -196,7 +195,6 @@ The free version of Automate allows 30 blocks to be run at once with full capabi
     - This can be searched for within the Automate app on your mobile device.
 2. Edit the "HTTP request" block
     - Update the Request URL to your actualtap address
-    - Update your default account in the Request content body.  This should match an account name in your ActualBudget.
     - Update your API key for your actualtap deployment
 
 <img src="images/automate-wallet to actualtap-html.png" height=550>
