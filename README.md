@@ -71,10 +71,11 @@ curl -X POST https://actualtap.yourdomain.com/transaction \
 
 ```bash
 docker run -p 3001:3001 \
+  -e TZ=your_timezone \
+  -e API_KEY=your_api_key \
   -e ACTUAL_URL=your_actual_url \
   -e ACTUAL_PASSWORD=your_password \
   -e ACTUAL_BUDGET_ID=your_budget_id \
-  -e API_KEY=your_api_key \
   mattyfaz/actualtap
 ```
 #### Docker Compose
@@ -91,16 +92,17 @@ services:
       - /your/path/here:/app/data
     environment:
       - TZ=
+      - API_KEY=
       - ACTUAL_URL=
       - ACTUAL_PASSWORD=
       - ACTUAL_BUDGET_ID=
-      - API_KEY=
 ```
 
 ### Environment Variables
 
 | Variable | Example | Description |
 |----------|---------|-------------|
+| `TZ` | Australia/Melbourne | Your timezone, ideally you should match the TZ set in Actual |
 | `API_KEY` | 527D6AAA-B22A-4D48-9DC8-C203139E5531 | Unique API key for authentication (generate with [uuidgenerator.net](https://www.uuidgenerator.net)) |
 | `ACTUAL_URL` | https://actual.yourdomain.com | URL to Actual Budget Server |
 | `ACTUAL_PASSWORD` | superSecretPassword | Password for your Actual Budget Server |
@@ -161,7 +163,7 @@ You do not nee to make any edits to the Shortcut. Once added, follow the below s
       | Account | Text | *exact name of Account in Actual Budget* |
       | Merchant | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Merchant* |
       | Name | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Name* |
-      | Amount | Number |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
+      | Amount | Text |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
 
 4. Search & tap on *'Run Shortcut'*
 5. Tap *'Shortcut'* and select *'ActualTap'*
