@@ -6,6 +6,7 @@ const transactionSchema = {
         amount: { type: "number", minimum: 0, default: 0 },
         payee: { type: "string", default: "Unknown" },
         account: { type: "string" },
+        notes: { type: "string" }
       },
       required: ["account"],
     },
@@ -13,12 +14,13 @@ const transactionSchema = {
 };
 
 const createTransaction = (request) => {
-  const { payee, amount } = request.body;
+  const { payee, amount, notes } = request.body;
   const transactionAmount = amount !== undefined ? -Math.round(amount * 100) : 0;
 
   return {
     payee_name: payee || "Unknown",
     amount: transactionAmount,
+    notes: notes,
     date: new Date().toISOString().split("T")[0],
     cleared: false,
   };
