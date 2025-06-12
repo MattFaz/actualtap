@@ -20,7 +20,7 @@ const createTransaction = (request) => {
   return {
     payee_name: payee || "Unknown",
     amount: transactionAmount,
-    notes: notes,
+    notes: notes || "",
     date: new Date().toISOString().split("T")[0],
     cleared: false,
   };
