@@ -20,7 +20,7 @@ fastify.setErrorHandler((error, request, reply) => {
 // Start the server
 const start = async () => {
   try {
-    fastify.log.info("Starting server v1.0.6");
+    fastify.log.info("Starting server v1.0.7");
     await registerModules();
     await fastify.listen({ port: 3001, host: "0.0.0.0" });
   } catch (err) {

@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0.6
+## v1.0.6 && v1.0.7
 
 This release includes a **BREAKING CHANGE**. You will need to change the variable name `ACTUAL_BUDGET_ID` to `ACTUAL_SYNC_ID`
 
