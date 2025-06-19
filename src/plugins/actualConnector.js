@@ -41,8 +41,8 @@ const actualConnector = fp(async (fastify, options) => {
     fastify.log.info("Actual API initialized successfully");
 
     try {
-      fastify.log.info(`Downloading budget with ID: ${process.env.ACTUAL_BUDGET_ID}`);
-      await actual.downloadBudget(process.env.ACTUAL_BUDGET_ID);
+      fastify.log.info(`Downloading budget with Sync ID: ${process.env.ACTUAL_SYNC_ID}`);
+      await actual.downloadBudget(process.env.ACTUAL_SYNC_ID);
       fastify.log.info("Budget downloaded successfully");
     } catch (err) {
       const error = new Error(`Failed to download budget: ${err.message}`);

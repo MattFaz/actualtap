@@ -2,12 +2,12 @@ const fastifyEnv = require("@fastify/env");
 
 const schema = {
   type: "object",
-  required: ["API_KEY", "ACTUAL_URL", "ACTUAL_PASSWORD", "ACTUAL_BUDGET_ID"],
+  required: ["API_KEY", "ACTUAL_URL", "ACTUAL_PASSWORD", "ACTUAL_SYNC_ID"],
   properties: {
     API_KEY: { type: "string" },
     ACTUAL_URL: { type: "string" },
     ACTUAL_PASSWORD: { type: "string" },
-    ACTUAL_BUDGET_ID: { type: "string" },
+    ACTUAL_SYNC_ID: { type: "string" },
   },
 };
 

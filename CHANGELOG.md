@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.6
+
+This release includes a **BREAKING CHANGE**. You will need to change the variable name `ACTUAL_BUDGET_ID` to `ACTUAL_SYNC_ID`
+
+### Changed
+- Renamed environment variable `ACTUAL_BUDGET_ID` to `ACTUAL_SYNC_ID` for better clarity
+- Updated all references to use sync ID terminology consistently across documentation and code
+- Updated package dependencies to latest versions
+
 ## v1.0.5
 
 ### Changed
