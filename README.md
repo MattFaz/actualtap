@@ -75,7 +75,7 @@ docker run -p 3001:3001 \
   -e API_KEY=your_api_key \
   -e ACTUAL_URL=your_actual_url \
   -e ACTUAL_PASSWORD=your_password \
-  -e ACTUAL_BUDGET_ID=your_budget_id \
+  -e ACTUAL_SYNC_ID=your_budget_id \
   mattyfaz/actualtap
 ```
 #### Docker Compose
@@ -95,7 +95,7 @@ services:
       - API_KEY=
       - ACTUAL_URL=
       - ACTUAL_PASSWORD=
-      - ACTUAL_BUDGET_ID=
+      - ACTUAL_SYNC_ID=
 ```
 
 ### Environment Variables
@@ -106,7 +106,7 @@ services:
 | `API_KEY` | 527D6AAA-B22A-4D48-9DC8-C203139E5531 | Unique API key for authentication (generate with [uuidgenerator.net](https://www.uuidgenerator.net)) |
 | `ACTUAL_URL` | https://actual.yourdomain.com | URL to Actual Budget Server |
 | `ACTUAL_PASSWORD` | superSecretPassword | Password for your Actual Budget Server |
-| `ACTUAL_BUDGET_ID` | 8B51B58D-3A0D-4B5B-A41F-DE574306A4F2 | The Unique ID of your Budget |
+| `ACTUAL_SYNC_ID` | 8B51B58D-3A0D-4B5B-A41F-DE574306A4F2 | The Unique ID of your Budget |
 
 ### Local Development
 
@@ -126,7 +126,7 @@ services:
    export API_KEY="your-api-key"
    export ACTUAL_URL="your-actual-url"
    export ACTUAL_PASSWORD="your-password"
-   export ACTUAL_BUDGET_ID="your-budget-id"
+   export ACTUAL_SYNC_ID="your-budget-id"
    ```
 
 4. Start the development server:
