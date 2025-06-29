@@ -6,7 +6,7 @@ const transactionSchema = {
         amount: { type: "number", minimum: 0, default: 0 },
         payee: { type: "string", default: "Unknown" },
         account: { type: "string" },
-        notes: { type: "string" }
+        notes: { type: "string" },
       },
       required: ["account"],
     },
