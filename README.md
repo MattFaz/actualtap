@@ -144,7 +144,7 @@ The app will run on port `3001` by default.
 
 Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to trigger the Shortcut upon tapping your iOS device to pay.
 
-Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/6bdf157fd17346829f50832e266ff691
+Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/a07b4aca380f422ba30e1ccf1ca95aa9
 
 You do not nee to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
 
