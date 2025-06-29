@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.8
+
+### Fixed
+- **CRITICAL SECURITY FIX**: Fixed API key authentication bypass issue where authentication hook was not applying to transaction routes due to Fastify plugin encapsulation
+- Moved authentication hook from plugin-scoped context to global root level registration to ensure all routes are properly protected
+- API requests without valid `X-API-KEY` header are now correctly rejected with 401 Unauthorized status
+
 ## v1.0.6 && v1.0.7
 
 This release includes a **BREAKING CHANGE**. You will need to change the variable name `ACTUAL_BUDGET_ID` to `ACTUAL_SYNC_ID`
