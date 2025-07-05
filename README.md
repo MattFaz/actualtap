@@ -215,6 +215,86 @@ The free version of Automate allows 30 blocks to be run at once with full capabi
 
 If a request failed, you can change the Notification block to activate "Immediately" to process it.  Then change it back to "When transition"
 
+### Home Assistant
+
+#### ***Enable features in the companion app***
+
+Navigate to **Settings -> Companion App -> Manage Sensors**
+Select **Last Notification**
+  1. Enable the sensor
+  2. Select **Allow list**.  Select any apps that will be used for posting transactions.  **Google Wallet** is typically selected.
+
+#### Edit ***configuration.yaml*** for the Home Assistant server
+
+Add a section in configuration.yaml and update your actualtap url.
+```
+rest_command:
+  actualbudget:
+    url: "https://actualtap.example.com/transaction"
+    method: post
+    content_type: 'application/json'
+    headers:
+      X-API-KEY: !secret actualtap_api
+    payload: '{"account": "{{accountVar}}", "amount": "{{amountVar}}", "date": "{{dateVar}}", "payee": "{{payeeVar}}", "notes": "{{notesVar}}"}'
+
+```
+
+### Edit ***secrets.yaml***
+
+Add your api key.
+
+```
+actualtap_api: "YOUR API KEY"
+```
+
+### Create an Automation
+
+Navigate to ***Settings -> Automations and Scenes*** within Home Assistant.
+
+Create a new Automation
+
+Use the three dot menu at the top to ***"Edit in YAML"***.
+
+Paste the following code.  Replace ***"your_device"*** with your devices name.
+
+```
+alias: Google Wallet Transaction Automation
+description: ""
+triggers:
+  - entity_id: sensor.your_device_last_notification
+    trigger: state
+actions:
+  - data:
+      accountVar: >
+        {% set text = state_attr('sensor.your_device_last_notification',
+        'android.text') %} {% if text %}
+          {{ text.split(' with ')[1] if ' with ' in text else 'Unknown Account' }}
+        {% else %}
+          'Unknown Account'
+        {% endif %}
+      amountVar: >
+        {% set text = state_attr('sensor.your_device_last_notification',
+        'android.text') %} {% if text %}
+          {% set match = text | regex_findall('\$([0-9]+\.[0-9]{2})') %}
+          {{ match[0] if match else '0.00' }}
+        {% else %}
+          '0.00'
+        {% endif %}
+      dateVar: "{{ now().date() }}"
+      payeeVar: >-
+        {{ state_attr('sensor.your_device_last_notification', 'android.title')
+        }}
+      notesVar: Added with Home Assistant
+    response_variable: httpresponse
+    action: rest_command.actualbudget
+  - data:
+      level: info
+      message: "REST Response: {{ httpresponse }}"
+    action: system_log.write
+```
+
+
+
 ## Caddy
 
 Actual Tap was developed with Mobile Tap-to-Pay as the main use case. In order for that to function Actual Tap needs to be exposed to the internet. Below is a standard Caddyfile configuration:
