@@ -3,10 +3,15 @@ const transactionSchema = {
     body: {
       type: "object",
       properties: {
-        amount: { type: "number", minimum: 0, default: 0 },
+        amount: { type: "number", default: 0 },
         payee: { type: "string", default: "Unknown" },
         account: { type: "string" },
         notes: { type: "string" },
+        type: {
+            type: "string",
+            enum: ["purchase", "payment", "withdrawal", "deposit"],
+            default: "purchase"
+        }
       },
       required: ["account"],
     },
@@ -14,8 +19,9 @@ const transactionSchema = {
 };
 
 const createTransaction = (request) => {
-  const { payee, amount, notes } = request.body;
-  const transactionAmount = amount !== undefined ? -Math.round(amount * 100) : 0;
+    const { payee, amount, notes, type = "purchase" } = request.body;
+    const isCredit = type === "deposit" || type === "withdrawal";
+    const transactionAmount = amount !== undefined ? Math.round(amount * 100) * (isCredit ? 1 : -1) : 0;
 
   return {
     payee_name: payee || "Unknown",
