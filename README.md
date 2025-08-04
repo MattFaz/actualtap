@@ -4,6 +4,8 @@
     <img src="images/logo.webp" width="200" height="200">
     <br>
     <i>Automatically create transactions in <a href="https://github.com/actualbudget/actual">Actual Budget</a> when you use Tap-to-Pay on a mobile device</i>
+    <br>
+    <strong>Version 1.0.9</strong>
 </p>
 
 ## Overview
@@ -47,12 +49,14 @@ Content-Type: application/json
 {
   "account": "Checking",  // Required: Name of the account in Actual Budget
   "amount": 10.50,       // Optional: Transaction amount (defaults to 0)
-  "payee": "Starbucks"   // Optional: Name of the payee (defaults to "Unknown")
+  "payee": "Starbucks",  // Optional: Name of the payee (defaults to "Unknown")
+  "type": "payment"      // Optional: "payment" or "deposit" (defaults to "payment")
 }
 ```
 
 ### Example cURL
 ```bash
+# Regular transaction (expense)
 curl -X POST https://actualtap.yourdomain.com/transaction \
   -H "X-API-KEY: your-api-key" \
   -H "Content-Type: application/json" \
@@ -60,6 +64,17 @@ curl -X POST https://actualtap.yourdomain.com/transaction \
     "account": "Checking",
     "amount": 10.50,
     "payee": "Starbucks"
+  }'
+
+# Deposit transaction
+curl -X POST https://actualtap.yourdomain.com/transaction \
+  -H "X-API-KEY: your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "account": "Checking",
+    "amount": 100.00,
+    "payee": "Refund",
+    "type": "deposit"
   }'
 ```
 
