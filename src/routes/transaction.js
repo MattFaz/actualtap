@@ -9,8 +9,8 @@ const transactionSchema = {
         notes: { type: "string" },
         type: {
             type: "string",
-            enum: ["purchase", "payment", "withdrawal", "deposit"],
-            default: "purchase"
+            enum: ["payment","deposit"],
+            default: "payment"
         }
       },
       required: ["account"],
@@ -19,9 +19,9 @@ const transactionSchema = {
 };
 
 const createTransaction = (request) => {
-    const { payee, amount, notes, type = "purchase" } = request.body;
-    const isCredit = type === "deposit" || type === "withdrawal";
-    const transactionAmount = amount !== undefined ? Math.round(amount * 100) * (isCredit ? 1 : -1) : 0;
+    const { payee, amount, notes, type = "payment" } = request.body;
+    const isDeposit = type === "deposit";
+    const transactionAmount = amount !== undefined ? Math.round(amount * 100) * (isDeposit ? 1 : -1) : 0;
 
   return {
     payee_name: payee || "Unknown",
