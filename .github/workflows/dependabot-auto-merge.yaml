@@ -1,0 +1,132 @@
+name: Dependabot Auto-Merge @actual-app/api Updates
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]' && startsWith(github.event.pull_request.title, 'Bump @actual-app/api')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Get current and new versions
+        id: versions
+        run: |
+          # Use Dependabot metadata for version info
+          echo "current_api_version=${{ steps.metadata.outputs.previous-version }}" >> $GITHUB_OUTPUT
+          echo "new_api_version=${{ steps.metadata.outputs.new-version }}" >> $GITHUB_OUTPUT
+          
+          # Get current app version from package.json
+          CURRENT_APP_VERSION=$(node -p "require('./package.json').version")
+          echo "current_app_version=$CURRENT_APP_VERSION" >> $GITHUB_OUTPUT
+          
+          # Calculate new app version (increment patch version)
+          IFS='.' read -r major minor patch <<< "$CURRENT_APP_VERSION"
+          NEW_APP_VERSION="$major.$minor.$((patch + 1))"
+          echo "new_app_version=$NEW_APP_VERSION" >> $GITHUB_OUTPUT
+          
+          echo "Current @actual-app/api version: ${{ steps.metadata.outputs.previous-version }}"
+          echo "New @actual-app/api version: ${{ steps.metadata.outputs.new-version }}"
+          echo "Current app version: $CURRENT_APP_VERSION"
+          echo "New app version: $NEW_APP_VERSION"
+
+      - name: Update package.json version
+        run: |
+          # Update the version field in package.json
+          node -e "const pkg=require('./package.json'); pkg.version='${{ steps.versions.outputs.new_app_version }}'; require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2)+'\n');"
+          
+      - name: Update CHANGELOG.md
+        run: |
+          # Prepare the new changelog entry
+          cat > /tmp/new_entry.md << EOF
+          ## v${{ steps.versions.outputs.new_app_version }}
+          
+          - Update @actual-app/api from ${{ steps.versions.outputs.current_api_version }} to ${{ steps.versions.outputs.new_api_version }}
+          
+          EOF
+          
+          # Insert the new entry after the "# Changelog" line
+          awk '/^# Changelog$/ {print; print ""; getline < "/tmp/new_entry.md"; print; next} 1' CHANGELOG.md > /tmp/changelog.tmp
+          mv /tmp/changelog.tmp CHANGELOG.md
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add package.json CHANGELOG.md
+          git commit -m "Bump version to v${{ steps.versions.outputs.new_app_version }} and update changelog"
+          git push
+  
+  approve-and-merge:
+    needs: [update-version]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    if: github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          
+      - name: Approve and merge PR
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --squash --auto "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-release:
+    needs: [approve-and-merge]
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      - name: Get app version
+        id: version
+        run: |
+          APP_VERSION=$(node -p "require('./package.json').version")
+          echo "app_version=$APP_VERSION" >> $GITHUB_OUTPUT
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.app_version }}
+          name: v${{ steps.version.outputs.app_version }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
