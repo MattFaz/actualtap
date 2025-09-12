@@ -7,7 +7,7 @@
     "fastify-plugin": "^5.0.1"
   },
   "name": "actualtap",
-  "version": "1.0.0",
+  "version": "1.0.11",
   "description": "Automatically create transactions in Actual Budget when you use Tap-to-Pay on a mobile device",
   "main": "index.js",
   "repository": "https://github.com/MattFaz/actualtap",
