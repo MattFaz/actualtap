@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.11
+
+- - Update @actual-app/api to ^25.9.0
+
 ## v1.0.10
 
 - Ignore trailing slashes in URL paths to fix compatibility with Tasker which automatically appends trailing slashes (PR #29)
