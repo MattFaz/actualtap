@@ -159,7 +159,7 @@ The app will run on port `3001` by default.
 
 Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to trigger the Shortcut upon tapping your iOS device to pay.
 
-Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/a07b4aca380f422ba30e1ccf1ca95aa9
+Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/4094d2043920441ca6805fe443606771
 
 You do not nee to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
 
@@ -176,9 +176,9 @@ You do not nee to make any edits to the Shortcut. Once added, follow the below s
       | URL |Text|https://actualtap.yourdomain.com|
       | API_KEY |Text|*api_key used when setting up ActualTap*|
       | Account | Text | *exact name of Account in Actual Budget* |
-      | Merchant | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Merchant* |
-      | Name | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Name* |
-      | Amount | Text |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
+      | Merchant | Transaction | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Merchant* |
+      | Name | Transaction | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Name* |
+      | Amount | Transaction |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
 
 4. Search & tap on *'Run Shortcut'*
 5. Tap *'Shortcut'* and select *'ActualTap'*
