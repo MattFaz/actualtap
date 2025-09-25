@@ -40,12 +40,58 @@ const actualConnector = fp(async (fastify, options) => {
     clearTimeout(initTimeout);
     fastify.log.info("Actual API initialized successfully");
 
-    try {
-      fastify.log.info(`Downloading budget with Sync ID: ${process.env.ACTUAL_SYNC_ID}`);
-      await actual.downloadBudget(process.env.ACTUAL_SYNC_ID);
-      fastify.log.info("Budget downloaded successfully");
-    } catch (err) {
-      const error = new Error(`Failed to download budget: ${err.message}`);
+    // Try to download the budget with retry logic
+    let budgetDownloaded = false;
+    let retryCount = 0;
+    const maxRetries = 3;
+
+    while (!budgetDownloaded && retryCount < maxRetries) {
+      try {
+        fastify.log.info(
+          `Downloading budget with Sync ID: ${process.env.ACTUAL_SYNC_ID} ${
+            process.env.ACTUAL_ENCRYPTION_PASSWORD
+              ? `with encryption password: ${process.env.ACTUAL_ENCRYPTION_PASSWORD}`
+              : ""
+          } (attempt ${retryCount + 1}/${maxRetries})`
+        );
+        await actual.downloadBudget(process.env.ACTUAL_SYNC_ID, { password: process.env.ACTUAL_ENCRYPTION_PASSWORD });
+        fastify.log.info("Budget downloaded successfully");
+        budgetDownloaded = true;
+      } catch (err) {
+        retryCount++;
+
+        if (err.message.includes("JSON") || err.message.includes("metadata")) {
+          fastify.log.error(`Budget metadata corrupted (attempt ${retryCount}/${maxRetries}): ${err.message}`);
+
+          if (retryCount < maxRetries) {
+            // Clean up corrupted data before retry
+            fastify.log.info("Cleaning up corrupted budget data before retry...");
+            const budgetPath = path.join(dataDir, `${process.env.ACTUAL_SYNC_ID}`);
+            if (fs.existsSync(budgetPath)) {
+              try {
+                fs.rmSync(budgetPath, { recursive: true, force: true });
+                fastify.log.info("Corrupted budget data cleaned up");
+              } catch (cleanupErr) {
+                fastify.log.warn(`Failed to clean up corrupted data: ${cleanupErr.message}`);
+              }
+            }
+
+            // Wait before retry
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+          }
+        } else {
+          // Non-corruption error, fail immediately
+          const error = new Error(`Failed to download budget: ${err.message}`);
+          fastify.log.error(error);
+          throw error;
+        }
+      }
+    }
+
+    if (!budgetDownloaded) {
+      const error = new Error(
+        `Failed to download budget after ${maxRetries} attempts. Budget data appears to be corrupted on the server.`
+      );
       fastify.log.error(error);
       throw error;
     }

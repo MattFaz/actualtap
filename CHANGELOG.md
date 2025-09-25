@@ -1,8 +1,16 @@
 # Changelog
 
+## v1.0.12
+
+- Added support for encrypted budgets via new `ACTUAL_ENCRYPTION_PASSWORD` environment variable
+- Added retry logic for budget downloads with automatic cleanup of corrupted data
+- Extended plugin timeout to 30 seconds to match Actual API initialization timeout
+- Updated error handling for budget download failures with specific handling for metadata corruption
+- Removed legacy error message for ACTUAL_BUDGET_ID to ACTUAL_SYNC_ID migration (no longer needed)
+
 ## v1.0.11
 
-- - Update @actual-app/api to ^25.9.0
+- Update @actual-app/api to ^25.9.0
 
 ## v1.0.10
 

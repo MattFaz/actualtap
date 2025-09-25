@@ -1,4 +1,8 @@
-const fastify = require("fastify")({ logger: true, ignoreTrailingSlash: true });
+const fastify = require("fastify")({
+  logger: true,
+  ignoreTrailingSlash: true,
+  pluginTimeout: 30000 // 30 seconds to match Actual API initialization timeout
+});
 const { version } = require("../package.json");
 
 // Global authentication hook - registered at root level to apply to all routes

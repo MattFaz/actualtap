@@ -8,6 +8,7 @@ const schema = {
     ACTUAL_URL: { type: "string" },
     ACTUAL_PASSWORD: { type: "string" },
     ACTUAL_SYNC_ID: { type: "string" },
+    ACTUAL_ENCRYPTION_PASSWORD: { type: "string", default: "" },
   },
 };
 
@@ -20,13 +21,8 @@ const validateEnvVars = () => {
   const requiredVars = schema.required;
   const missingVars = requiredVars.filter((key) => !process.env[key] || process.env[key].trim() === "");
 
-  if (missingVars.length > 0) {
-    // TODO: remove this after a few months
-    if (missingVars.includes("ACTUAL_SYNC_ID")) {
-      throw new Error("v1.0.7 changed ACTUAL_BUDGET_ID to ACTUAL_SYNC_ID, please update your environment variables");
-    }
+  if (missingVars.length > 0)
     throw new Error(`Missing or empty required environment variables: ${missingVars.join(", ")}`);
-  }
 };
 
 validateEnvVars();

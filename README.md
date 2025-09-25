@@ -80,6 +80,8 @@ curl -X POST https://actualtap.yourdomain.com/transaction \
 
 ## Setup and Installation
 
+**Note:** `ACTUAL_ENCRYPTION_PASSWORD` is optional, it's only required if End-to-end encryption is Enabled on Actual Server and a password has been set.
+
 ### Running with Docker
 
 #### Docker CLI
@@ -91,6 +93,7 @@ docker run -p 3001:3001 \
   -e ACTUAL_URL=your_actual_url \
   -e ACTUAL_PASSWORD=your_password \
   -e ACTUAL_SYNC_ID=your_budget_id \
+  -e ACTUAL_ENCRYPTION_PASSWORD=your_encryption_password \ # optional
   mattyfaz/actualtap
 ```
 #### Docker Compose
@@ -111,6 +114,7 @@ services:
       - ACTUAL_URL=
       - ACTUAL_PASSWORD=
       - ACTUAL_SYNC_ID=
+      - ACTUAL_ENCRYPTION_PASSWORD=
 ```
 
 ### Environment Variables
@@ -122,6 +126,7 @@ services:
 | `ACTUAL_URL` | https://actual.yourdomain.com | URL to Actual Budget Server |
 | `ACTUAL_PASSWORD` | superSecretPassword | Password for your Actual Budget Server |
 | `ACTUAL_SYNC_ID` | 8B51B58D-3A0D-4B5B-A41F-DE574306A4F2 | The Unique ID of your Budget |
+| `ACTUAL_ENCRYPTION_PASSWORD` | encryptedSecretPassword | Your Encrypted Password *(optional, N/A if not using End-to-end encryption)* |
 
 ### Local Development
 
@@ -142,6 +147,7 @@ services:
    export ACTUAL_URL="your-actual-url"
    export ACTUAL_PASSWORD="your-password"
    export ACTUAL_SYNC_ID="your-budget-id"
+   export ACTUAL_ENCRYPTION_PASSWORD="encryptedSecretPassword" # optional
    ```
 
 4. Start the development server:
