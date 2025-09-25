@@ -11,10 +11,10 @@ COPY package.json package-lock.json* /app/
 RUN npm ci
 
 # copy over all files to the work directory
-ADD ./src /app
+COPY ./src /app/src
 
 # expose the host and port 3001 to the server
 EXPOSE 3001
 
 # start the app
-CMD ["node", "server.js"]
+CMD ["node", "src/server.js"]

@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.13
+
+- Hotfix for invalid Dockerfile setup
+
 ## v1.0.12
 
 - Added support for encrypted budgets via new `ACTUAL_ENCRYPTION_PASSWORD` environment variable
