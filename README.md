@@ -101,13 +101,11 @@ docker run -p 3001:3001 \
 ```yml
 services:
   actualtap:
-    container_name: actualtap 
+    container_name: actualtap
     image: mattyfaz/actualtap:latest
     restart: always
     ports:
       - 3001:3001
-    volumes:
-      - /your/path/here:/app/data
     environment:
       - TZ=
       - API_KEY=

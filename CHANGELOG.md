@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.15
+- **Major Change:** Now uses OS temporary directories instead of persistent storage
+- Simplified retry logic to handle all errors uniformly with automatic retries (up to 3 attempts)
+- Added bruno to .gitignore (API testing client)
+
 ## v1.0.14
 - Password option now only passed to `downloadBudget()` when `ACTUAL_ENCRYPTION_PASSWORD` is set, hopefully preventing sync errors for non-encrypted budgets (issue #36)
 - Updated fastify from 5.4.0 to 5.6.1

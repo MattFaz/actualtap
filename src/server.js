@@ -1,7 +1,9 @@
 const fastify = require("fastify")({
   logger: true,
-  ignoreTrailingSlash: true,
-  pluginTimeout: 30000 // 30 seconds to match Actual API initialization timeout
+  routerOptions: {
+    ignoreTrailingSlash: true,
+  },
+  pluginTimeout: 30000, // 30 seconds to match Actual API initialization timeout
 });
 const { version } = require("../package.json");
 
@@ -34,6 +36,8 @@ fastify.setErrorHandler((error, request, reply) => {
 const start = async () => {
   try {
     fastify.log.info(`Starting server v${version}`);
+    // Delete below line in a future release
+    fastify.log.info(`Note: Volume mapping from /app/data removed in v1.0.15`);
     await registerModules();
     await fastify.listen({ port: 3001, host: "0.0.0.0" });
   } catch (err) {
