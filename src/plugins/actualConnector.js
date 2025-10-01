@@ -54,7 +54,12 @@ const actualConnector = fp(async (fastify, options) => {
               : ""
           } (attempt ${retryCount + 1}/${maxRetries})`
         );
-        await actual.downloadBudget(process.env.ACTUAL_SYNC_ID, { password: process.env.ACTUAL_ENCRYPTION_PASSWORD });
+
+        if (process.env.ACTUAL_ENCRYPTION_PASSWORD) {
+          await actual.downloadBudget(process.env.ACTUAL_SYNC_ID, { password: process.env.ACTUAL_ENCRYPTION_PASSWORD });
+        } else {
+          await actual.downloadBudget(process.env.ACTUAL_SYNC_ID);
+        }
         fastify.log.info("Budget downloaded successfully");
         budgetDownloaded = true;
       } catch (err) {
