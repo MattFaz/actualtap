@@ -1,28 +1,11 @@
 const actual = require("@actual-app/api");
 const fp = require("fastify-plugin");
+const os = require("os");
 const path = require("path");
 const fs = require("fs");
 
 const actualConnector = fp(async (fastify, options) => {
   fastify.log.info("Starting Actual API connector initialization");
-
-  // Path to the data directory in the root
-  const dataDir = path.join(process.cwd(), "data");
-
-  // Ensure the data directory exists
-  if (!fs.existsSync(dataDir)) {
-    fastify.log.info(`Data directory does not exist. Creating: ${dataDir}`);
-    try {
-      fs.mkdirSync(dataDir, { recursive: true });
-      fastify.log.info("Data directory created successfully");
-    } catch (err) {
-      const error = new Error(`Failed to create data directory: ${err.message}`);
-      fastify.log.error(error);
-      throw error;
-    }
-  } else {
-    fastify.log.info(`Data directory exists: ${dataDir}`);
-  }
 
   try {
     fastify.log.info("Initializing Actual API");
@@ -30,6 +13,10 @@ const actualConnector = fp(async (fastify, options) => {
     const initTimeout = setTimeout(() => {
       throw new Error("Actual API initialization timed out after 30 seconds");
     }, 30000);
+
+    // Use OS temp directory - will be cleaned up automatically
+    const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "actualtap-"));
+    fastify.log.info(`Temporary data directory: ${dataDir}`);
 
     await actual.init({
       dataDir: dataDir,
@@ -64,39 +51,19 @@ const actualConnector = fp(async (fastify, options) => {
         budgetDownloaded = true;
       } catch (err) {
         retryCount++;
+        fastify.log.error(
+          `Budget download/sync error (attempt ${retryCount}/${maxRetries}): ${err.message || err.reason || err}`
+        );
 
-        if (err.message.includes("JSON") || err.message.includes("metadata")) {
-          fastify.log.error(`Budget metadata corrupted (attempt ${retryCount}/${maxRetries}): ${err.message}`);
-
-          if (retryCount < maxRetries) {
-            // Clean up corrupted data before retry
-            fastify.log.info("Cleaning up corrupted budget data before retry...");
-            const budgetPath = path.join(dataDir, `${process.env.ACTUAL_SYNC_ID}`);
-            if (fs.existsSync(budgetPath)) {
-              try {
-                fs.rmSync(budgetPath, { recursive: true, force: true });
-                fastify.log.info("Corrupted budget data cleaned up");
-              } catch (cleanupErr) {
-                fastify.log.warn(`Failed to clean up corrupted data: ${cleanupErr.message}`);
-              }
-            }
-
-            // Wait before retry
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-          }
-        } else {
-          // Non-corruption error, fail immediately
-          const error = new Error(`Failed to download budget: ${err.message}`);
-          fastify.log.error(error);
-          throw error;
+        if (retryCount < maxRetries) {
+          // Wait before retry
+          await new Promise((resolve) => setTimeout(resolve, 2000));
         }
       }
     }
 
     if (!budgetDownloaded) {
-      const error = new Error(
-        `Failed to download budget after ${maxRetries} attempts. Budget data appears to be corrupted on the server.`
-      );
+      const error = new Error(`Failed to download budget after ${maxRetries} attempts.`);
       fastify.log.error(error);
       throw error;
     }

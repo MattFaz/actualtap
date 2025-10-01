@@ -10,6 +10,4 @@ services:
       - ACTUAL_PASSWORD=
       - ACTUAL_SYNC_ID=
       - API_KEY=
-    volumes:
-      - /your/path/here:/app/data
     network_mode: bridge
