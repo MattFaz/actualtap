@@ -165,7 +165,7 @@ Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to
 
 Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/4094d2043920441ca6805fe443606771
 
-You do not nee to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
+You do not need to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
 
 <img src="images/automation.png" height="350">
 
