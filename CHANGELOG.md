@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.14
+- Password option now only passed to `downloadBudget()` when `ACTUAL_ENCRYPTION_PASSWORD` is set, hopefully preventing sync errors for non-encrypted budgets (issue #36)
+- Updated fastify from 5.4.0 to 5.6.1
+- Updated fastify-plugin from 5.0.1 to 5.1.0
+- Updated @fastify/env from 5.0.2 to 5.0.3
+- Updated tar-fs from 2.1.3 to 2.1.4 (security update)
+
 ## v1.0.13
 
 - Hotfix for invalid Dockerfile setup
