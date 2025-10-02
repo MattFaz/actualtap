@@ -170,7 +170,7 @@ You do not need to make any edits to the Shortcut. Once added, follow the below 
 <img src="images/automation.png" height="350">
 
 1. Open Shortcuts app, select *'Automations'*, then *'+'* to create a new Automation
-2. Tap *'Transaction'* and Enable relevant Card, all Categories, then select *'Run Immediately'*
+2. Tap *'Wallet'* and Enable relevant Card, all Categories, then select *'Run Immediately'*
     - Do **not** enable *'Notify When Run'*
 3. Select *'New Blank Automation'*, then Search & add *'Dictionary'*
     - Add the values below to Dictionary:
