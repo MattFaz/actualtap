@@ -1,5 +1,7 @@
 # Changelog
 
+## v1.0.16
+
 ## v1.0.15
 - **Major Change:** Now uses OS temporary directories instead of persistent storage
 - Simplified retry logic to handle all errors uniformly with automatic retries (up to 3 attempts)
