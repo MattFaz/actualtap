@@ -4,8 +4,6 @@
     <img src="images/logo.webp" width="200" height="200">
     <br>
     <i>Automatically create transactions in <a href="https://github.com/actualbudget/actual">Actual Budget</a> when you use Tap-to-Pay on a mobile device</i>
-    <br>
-    <strong>Version 1.0.9</strong>
 </p>
 
 ## Overview
