@@ -1,5 +1,7 @@
 # Changelog
 
+## v1.0.17
+
 ## v1.0.16
 
 - Bump @actual-app/api from 25.9.0 to 25.10.0 
