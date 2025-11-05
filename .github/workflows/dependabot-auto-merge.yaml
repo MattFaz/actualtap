@@ -61,17 +61,13 @@ jobs:
           
       - name: Update CHANGELOG.md
         run: |
-          # Prepare the new changelog entry
-          cat > /tmp/new_entry.md << EOF
-          ## v${{ steps.versions.outputs.new_app_version }}
-          
-          - Update @actual-app/api from ${{ steps.versions.outputs.current_api_version }} to ${{ steps.versions.outputs.new_api_version }}
-          
-          EOF
-          
           # Insert the new entry after the "# Changelog" line
-          awk '/^# Changelog$/ {print; print ""; getline < "/tmp/new_entry.md"; print; next} 1' CHANGELOG.md > /tmp/changelog.tmp
-          mv /tmp/changelog.tmp CHANGELOG.md
+          sed -i "/^# Changelog$/a\\
+          \\
+          ## v${{ steps.versions.outputs.new_app_version }}\\
+          \\
+          - Update @actual-app/api from ${{ steps.versions.outputs.current_api_version }} to ${{ steps.versions.outputs.new_api_version }}\\
+          " CHANGELOG.md
 
       - name: Commit changes
         run: |
@@ -101,7 +97,7 @@ jobs:
           gh pr merge --squash --auto "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create-release:
     needs: [approve-and-merge]

@@ -1,8 +1,24 @@
 # Changelog
 
+## v1.0.17
+
+- Bump @actual-app/api from 25.10.0 to 25.11.0
+- Add pino-pretty for better log formatting
+- **Major Improvement:** Enhanced error handling in actualConnector plugin with specific error messages:
+  - URL validation with protocol checking
+  - Network connectivity verification with timeout and connection error detection
+  - Authentication verification with clear password error messages
+  - Budget existence verification with available budget IDs listed
+  - Encryption password validation with specific error messages
+  - Added retry logic for budget downloads (3 attempts with 2s delay) to handle transient network failures
+- Improved GitHub Actions workflow:
+  - Simplified CHANGELOG.md update process using sed instead of awk
+  - Updated token authentication from PAT_TOKEN to GITHUB_TOKEN
+- Code formatting improvements for consistency
+
 ## v1.0.16
 
-- Bump @actual-app/api from 25.9.0 to 25.10.0 
+- Bump @actual-app/api from 25.9.0 to 25.10.0
 
 ## v1.0.15
 - **Major Change:** Now uses OS temporary directories instead of persistent storage
