@@ -4,88 +4,167 @@ const os = require("os");
 const path = require("path");
 const fs = require("fs");
 
-const actualConnector = fp(async (fastify, options) => {
-  fastify.log.info("Starting Actual API connector initialization");
+// Validate and normalize URL format
+const validateUrl = (url) => {
+  if (!url || typeof url !== "string") {
+    throw new Error("ACTUAL_URL is not a valid string");
+  }
 
   try {
-    fastify.log.info("Initializing Actual API");
-    // Set a timeout for initialization
-    const initTimeout = setTimeout(() => {
-      throw new Error("Actual API initialization timed out after 30 seconds");
-    }, 30000);
-
-    // Use OS temp directory - will be cleaned up automatically
-    const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "actualtap-"));
-    fastify.log.info(`Temporary data directory: ${dataDir}`);
-
-    await actual.init({
-      dataDir: dataDir,
-      serverURL: process.env.ACTUAL_URL,
-      password: process.env.ACTUAL_PASSWORD,
-    });
-
-    clearTimeout(initTimeout);
-    fastify.log.info("Actual API initialized successfully");
-
-    // Try to download the budget with retry logic
-    let budgetDownloaded = false;
-    let retryCount = 0;
-    const maxRetries = 3;
-
-    while (!budgetDownloaded && retryCount < maxRetries) {
-      try {
-        fastify.log.info(
-          `Downloading budget with Sync ID: ${process.env.ACTUAL_SYNC_ID} ${
-            process.env.ACTUAL_ENCRYPTION_PASSWORD
-              ? `with encryption password: ${process.env.ACTUAL_ENCRYPTION_PASSWORD}`
-              : ""
-          } (attempt ${retryCount + 1}/${maxRetries})`
-        );
-
-        if (process.env.ACTUAL_ENCRYPTION_PASSWORD) {
-          await actual.downloadBudget(process.env.ACTUAL_SYNC_ID, { password: process.env.ACTUAL_ENCRYPTION_PASSWORD });
-        } else {
-          await actual.downloadBudget(process.env.ACTUAL_SYNC_ID);
-        }
-        fastify.log.info("Budget downloaded successfully");
-        budgetDownloaded = true;
-      } catch (err) {
-        retryCount++;
-        fastify.log.error(
-          `Budget download/sync error (attempt ${retryCount}/${maxRetries}): ${err.message || err.reason || err}`
-        );
-
-        if (retryCount < maxRetries) {
-          // Wait before retry
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-        }
-      }
+    const parsed = new URL(url);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      throw new Error("ACTUAL_URL must use http:// or https:// protocol");
     }
-
-    if (!budgetDownloaded) {
-      const error = new Error(`Failed to download budget after ${maxRetries} attempts.`);
-      fastify.log.error(error);
-      throw error;
-    }
-
-    fastify.decorate("actual", actual);
-    fastify.log.info("Actual API connector setup completed successfully");
-
-    fastify.addHook("onClose", async (done) => {
-      fastify.log.info("Starting Actual API cleanup");
-      try {
-        await actual.close();
-        fastify.log.info("Actual API cleanup completed successfully");
-        done();
-      } catch (err) {
-        fastify.log.error(`Error during Actual API cleanup: ${err.message}`);
-        done(err);
-      }
-    });
+    return url.replace(/\/+$/, ""); // Remove trailing slashes
   } catch (err) {
-    fastify.log.error(`Actual API initialization failed: ${err.message}`);
-    throw err;
+    throw new Error(`Invalid ACTUAL_URL format: ${err.message}`);
   }
+};
+
+// Verify network connectivity
+const verifyConnectivity = async (url) => {
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (response.status < 200 || response.status >= 400) {
+      throw new Error(`Server returned HTTP ${response.status}`);
+    }
+  } catch (err) {
+    if (err.name === "AbortError" || err.name === "TimeoutError") {
+      throw new Error("Connection timed out - check if server is accessible");
+    }
+    if (err.cause?.code === "ENOTFOUND") {
+      throw new Error("Cannot resolve hostname - check if ACTUAL_URL is correct");
+    }
+    if (err.cause?.code === "ECONNREFUSED") {
+      throw new Error("Connection refused - check if server is running");
+    }
+    throw new Error(`Network error: ${err.message}`);
+  }
+};
+
+// Initialize Actual API
+const initializeActual = async (serverURL, password) => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "actualtap-"));
+
+  try {
+    await Promise.race([
+      actual.init({ dataDir, serverURL, password }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 30000)),
+    ]);
+  } catch (err) {
+    if (err.message === "TIMEOUT") {
+      throw new Error("Initialization timed out after 30 seconds");
+    }
+    throw new Error(`Failed to initialize Actual API: ${err.message}`);
+  }
+};
+
+// Verify authentication and return budgets
+const verifyAuthentication = async () => {
+  try {
+    const budgets = await actual.getBudgets();
+    if (!budgets || budgets.length === 0) {
+      throw new Error("ACTUAL_PASSWORD is incorrect (no budgets found)");
+    }
+    return budgets;
+  } catch (err) {
+    throw new Error(`Authentication failed: ${err.message}`);
+  }
+};
+
+// Verify budget exists
+const verifyBudgetExists = (budgets, syncId) => {
+  const budget = budgets.find((b) => b.groupId === syncId);
+  if (!budget) {
+    const availableIds = budgets.map((b) => b.groupId).join(", ");
+    throw new Error(`Budget '${syncId}' not found. Available: ${availableIds}`);
+  }
+  return budget;
+};
+
+// Download budget with retry logic
+const downloadBudget = async (syncId, encryptionPassword, logger, maxRetries = 3) => {
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      logger.info(`Downloading budget (attempt ${attempt}/${maxRetries})`);
+
+      if (encryptionPassword) {
+        await actual.downloadBudget(syncId, { password: encryptionPassword });
+      } else {
+        await actual.downloadBudget(syncId);
+      }
+
+      return; // Success!
+    } catch (err) {
+      lastError = err;
+
+      // Check for encryption errors - don't retry these
+      if (err.message?.includes("decrypt") || err.message?.includes("encryption")) {
+        throw new Error(`ACTUAL_ENCRYPTION_PASSWORD is incorrect: ${err.message}`);
+      }
+
+      // Log the error and retry if we have attempts left
+      logger.warn(`Budget download attempt ${attempt}/${maxRetries} failed: ${err.message || err.reason || err}`);
+
+      if (attempt < maxRetries) {
+        const delay = 2000;
+        logger.info(`Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  // All retries exhausted
+  throw new Error(`Failed to download budget after ${maxRetries} attempts: ${lastError.message || lastError.reason || lastError}`);
+};
+
+const actualConnector = fp(async (fastify) => {
+  fastify.log.info("Initializing Actual connector");
+
+  // Validate and normalize URL
+  const url = validateUrl(process.env.ACTUAL_URL);
+  fastify.log.info(`Connecting to: ${url}`);
+
+  // Verify server is reachable
+  await verifyConnectivity(url);
+  fastify.log.info("Server is reachable");
+
+  // Initialize Actual API
+  await initializeActual(url, process.env.ACTUAL_PASSWORD);
+  fastify.log.info("Actual API initialized");
+
+  // Verify authentication and get budgets
+  const budgets = await verifyAuthentication();
+  fastify.log.info(`Authenticated - found ${budgets.length} budget(s)`);
+
+  // Verify budget exists
+  const budget = verifyBudgetExists(budgets, process.env.ACTUAL_SYNC_ID);
+  fastify.log.info(`Budget found: ${budget.name || budget.groupId}`);
+
+  // Download budget
+  await downloadBudget(process.env.ACTUAL_SYNC_ID, process.env.ACTUAL_ENCRYPTION_PASSWORD, fastify.log);
+  fastify.log.info("Budget downloaded successfully");
+
+  // Decorate fastify instance
+  fastify.decorate("actual", actual);
+
+  // Cleanup on shutdown
+  fastify.addHook("onClose", async (done) => {
+    try {
+      await actual.close();
+      fastify.log.info("Actual API closed");
+      done();
+    } catch (err) {
+      fastify.log.error(`Cleanup error: ${err.message}`);
+      done(err);
+    }
+  });
 });
 
 module.exports = actualConnector;

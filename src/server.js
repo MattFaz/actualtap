@@ -1,5 +1,15 @@
 const fastify = require("fastify")({
-  logger: true,
+  logger: {
+    transport: {
+      target: "pino-pretty",
+      options: {
+        translateTime: "SYS:yyyy-mm-dd HH:MM:ss",
+        ignore: "hostname,pid",
+        singleLine: false,
+        hideObject: false,
+      },
+    },
+  },
   routerOptions: {
     ignoreTrailingSlash: true,
   },
@@ -35,9 +45,7 @@ fastify.setErrorHandler((error, request, reply) => {
 // Start the server
 const start = async () => {
   try {
-    fastify.log.info(`Starting server v${version}`);
-    // Delete below line in a future release
-    fastify.log.info(`Note: Volume mapping from /app/data removed in v1.0.15`);
+    fastify.log.info(`Starting ActualTap v${version}`);
     await registerModules();
     await fastify.listen({ port: 3001, host: "0.0.0.0" });
   } catch (err) {

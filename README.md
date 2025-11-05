@@ -324,6 +324,107 @@ actualtap.yourdomain.com {
     respond 401
 }
 ```
+
+## Troubleshooting
+
+### Common Errors and Solutions
+
+#### Connection Errors
+
+**Error: `Invalid ACTUAL_URL format`**
+- **Cause:** The URL is malformed or uses an invalid protocol
+- **Solution:** Ensure `ACTUAL_URL` uses `http://` or `https://` protocol (e.g., `https://actual.yourdomain.com`)
+
+**Error: `Connection timed out - check if server is accessible`**
+- **Cause:** Cannot reach the Actual Budget server within 5 seconds
+- **Solution:**
+  - Verify the server is running and accessible
+  - Check network connectivity
+  - Verify firewall rules allow the connection
+
+**Error: `Cannot resolve hostname - check if ACTUAL_URL is correct`**
+- **Cause:** DNS cannot resolve the hostname
+- **Solution:** Verify the URL is correct and the domain exists
+
+**Error: `Connection refused - check if server is running`**
+- **Cause:** Server is not accepting connections on the specified port
+- **Solution:** Verify Actual Budget server is running and listening on the correct port
+
+**Error: `Server returned HTTP [status code]`**
+- **Cause:** Server responded but with an error status
+- **Solution:** Check Actual Budget server logs for issues
+
+#### Authentication Errors
+
+**Error: `ACTUAL_PASSWORD is incorrect (no budgets found)`**
+- **Cause:** The password provided is invalid
+- **Solution:** Verify `ACTUAL_PASSWORD` matches your Actual Budget server password
+
+**Error: `Authentication failed`**
+- **Cause:** Cannot authenticate with the provided credentials
+- **Solution:**
+  - Verify `ACTUAL_PASSWORD` is correct
+  - Check Actual Budget server logs for authentication issues
+
+#### Budget Errors
+
+**Error: `Budget '[id]' not found. Available: [list]`**
+- **Cause:** The specified `ACTUAL_SYNC_ID` does not exist
+- **Solution:**
+  - Check the list of available budget IDs in the error message
+  - Update `ACTUAL_SYNC_ID` to use one of the available IDs
+  - You can find your budget's Sync ID in Actual Budget under Settings → Show advanced settings → Sync ID
+
+**Error: `ACTUAL_ENCRYPTION_PASSWORD is incorrect`**
+- **Cause:** The encryption password is wrong or the budget is not encrypted
+- **Solution:**
+  - If your budget uses end-to-end encryption, verify `ACTUAL_ENCRYPTION_PASSWORD` is correct
+  - If your budget is not encrypted, remove the `ACTUAL_ENCRYPTION_PASSWORD` environment variable
+
+**Error: `Failed to download budget`**
+- **Cause:** General error downloading the budget
+- **Solution:**
+  - Check Actual Budget server logs
+  - Verify network connectivity
+  - Try restarting ActualTap
+
+#### Transaction Errors
+
+**Error: `401 Unauthorized`**
+- **Cause:** Missing or invalid API key
+- **Solution:** Ensure the `X-API-KEY` header matches the `API_KEY` environment variable
+
+**Error: `Account '[name]' not found`**
+- **Cause:** The specified account does not exist in your budget
+- **Solution:**
+  - Verify the account name in your request exactly matches an account in Actual Budget (case-sensitive)
+  - Check for extra spaces or typos in the account name
+
+#### Initialization Errors
+
+**Error: `Initialization timed out after 30 seconds`**
+- **Cause:** Actual API took too long to initialize
+- **Solution:**
+  - Check network connectivity to Actual Budget server
+  - Verify server is responsive
+  - Try restarting ActualTap
+
+### Viewing Logs
+
+ActualTap uses pretty-printed logs for easier troubleshooting. To view logs:
+
+**Docker:**
+```bash
+docker logs actualtap
+```
+
+**Docker Compose:**
+```bash
+docker compose logs actualtap
+```
+
+Logs will show detailed information about the initialization process, including which step failed and why.
+
 ---
 
 **Note:** This project is in active development. Issues, pull requests, and feature requests are welcome.
