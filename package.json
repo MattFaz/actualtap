@@ -16,7 +16,7 @@
   "license": "GPL-3.0",
   "private": false,
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.11"
   },
   "scripts": {
     "start": "node src/server.js",
