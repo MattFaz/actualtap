@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.18
+
+- Increased `pluginTimeout` in server configuration from 30s to 120s to prevent crashes during budget download retries on slow connections
+
 ## v1.0.17
 
 - Bump @actual-app/api from 25.10.0 to 25.11.0

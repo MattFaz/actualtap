@@ -13,7 +13,7 @@ const fastify = require("fastify")({
   routerOptions: {
     ignoreTrailingSlash: true,
   },
-  pluginTimeout: 30000, // 30 seconds to match Actual API initialization timeout
+  pluginTimeout: 120000, // 120 seconds to match Actual API initialization timeout and retries
 });
 const { version } = require("../package.json");
 
