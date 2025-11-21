@@ -47,17 +47,17 @@ const verifyConnectivity = async (url) => {
 };
 
 // Initialize Actual API
-const initializeActual = async (serverURL, password) => {
+const initializeActual = async (serverURL, password, timeoutMs) => {
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "actualtap-"));
 
   try {
     await Promise.race([
       actual.init({ dataDir, serverURL, password }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 30000)),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), timeoutMs)),
     ]);
   } catch (err) {
     if (err.message === "TIMEOUT") {
-      throw new Error("Initialization timed out after 30 seconds");
+      throw new Error(`Initialization timed out after ${timeoutMs / 1000} seconds`);
     }
     throw new Error(`Failed to initialize Actual API: ${err.message}`);
   }
@@ -87,7 +87,7 @@ const verifyBudgetExists = (budgets, syncId) => {
 };
 
 // Download budget with retry logic
-const downloadBudget = async (syncId, encryptionPassword, logger, maxRetries = 3) => {
+const downloadBudget = async (syncId, encryptionPassword, logger, maxRetries, retryDelay) => {
   let lastError;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -113,9 +113,8 @@ const downloadBudget = async (syncId, encryptionPassword, logger, maxRetries = 3
       logger.warn(`Budget download attempt ${attempt}/${maxRetries} failed: ${err.message || err.reason || err}`);
 
       if (attempt < maxRetries) {
-        const delay = 2000;
-        logger.info(`Retrying in ${delay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, delay));
+        logger.info(`Retrying in ${retryDelay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
       }
     }
   }
@@ -125,10 +124,21 @@ const downloadBudget = async (syncId, encryptionPassword, logger, maxRetries = 3
 };
 
 const actualConnector = fp(async (fastify) => {
+  const { 
+    ACTUAL_URL, 
+    ACTUAL_PASSWORD, 
+    ACTUAL_SYNC_ID, 
+    ACTUAL_ENCRYPTION_PASSWORD 
+  } = fastify.config;
+
+  const TIMEOUT = 30000;
+  const RETRY_COUNT = 3;
+  const RETRY_DELAY = 2000;
+
   fastify.log.info("Initializing Actual connector");
 
   // Validate and normalize URL
-  const url = validateUrl(process.env.ACTUAL_URL);
+  const url = validateUrl(ACTUAL_URL);
   fastify.log.info(`Connecting to: ${url}`);
 
   // Verify server is reachable
@@ -136,7 +146,7 @@ const actualConnector = fp(async (fastify) => {
   fastify.log.info("Server is reachable");
 
   // Initialize Actual API
-  await initializeActual(url, process.env.ACTUAL_PASSWORD);
+  await initializeActual(url, ACTUAL_PASSWORD, TIMEOUT);
   fastify.log.info("Actual API initialized");
 
   // Verify authentication and get budgets
@@ -144,11 +154,11 @@ const actualConnector = fp(async (fastify) => {
   fastify.log.info(`Authenticated - found ${budgets.length} budget(s)`);
 
   // Verify budget exists
-  const budget = verifyBudgetExists(budgets, process.env.ACTUAL_SYNC_ID);
+  const budget = verifyBudgetExists(budgets, ACTUAL_SYNC_ID);
   fastify.log.info(`Budget found: ${budget.name || budget.groupId}`);
 
   // Download budget
-  await downloadBudget(process.env.ACTUAL_SYNC_ID, process.env.ACTUAL_ENCRYPTION_PASSWORD, fastify.log);
+  await downloadBudget(ACTUAL_SYNC_ID, ACTUAL_ENCRYPTION_PASSWORD, fastify.log, RETRY_COUNT, RETRY_DELAY);
   fastify.log.info("Budget downloaded successfully");
 
   // Decorate fastify instance

@@ -1,0 +1,28 @@
+meta {
+  name: transaction
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/transaction
+  body: json
+  auth: none
+}
+
+headers {
+  X-API-KEY: {{apiKey}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "account": "💳 Credit Card",
+    "amount": 100,
+    "payee": "Test"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

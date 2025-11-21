@@ -1,4 +1,5 @@
 const fastifyEnv = require("@fastify/env");
+const fp = require("fastify-plugin");
 
 const schema = {
   type: "object",
@@ -17,21 +18,11 @@ const options = {
   data: process.env,
 };
 
-const validateEnvVars = () => {
-  const requiredVars = schema.required;
-  const missingVars = requiredVars.filter((key) => !process.env[key] || process.env[key].trim() === "");
-
-  if (missingVars.length > 0)
-    throw new Error(`Missing or empty required environment variables: ${missingVars.join(", ")}`);
-};
-
-validateEnvVars();
-
-module.exports = async (fastify, opts) => {
+module.exports = fp(async (fastify, opts) => {
   try {
     await fastify.register(fastifyEnv, options);
   } catch (error) {
     fastify.log.error(`Failed to register environment variables: ${error.message}`);
     throw error;
   }
-};
+});

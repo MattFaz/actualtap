@@ -17,23 +17,29 @@ const fastify = require("fastify")({
 });
 const { version } = require("../package.json");
 
-// Global authentication hook - registered at root level to apply to all routes
-fastify.addHook("preHandler", async (request, reply) => {
-  const apiKey = request.headers["x-api-key"] || request.headers["X-API-KEY"];
-  if (apiKey !== process.env.API_KEY) {
-    reply.code(401).send({ error: "Unauthorized" });
-    return;
-  }
-});
-
 // Modular function registrations
 async function registerModules() {
   await fastify.register(require("./plugins/env"));
+
+  // Global authentication hook - registered after env to access fastify.config
+  fastify.addHook("preHandler", async (request, reply) => {
+    if (request.routerPath === "/health") {
+      return;
+    }
+
+    const apiKey = request.headers["x-api-key"];
+    if (apiKey !== fastify.config.API_KEY) {
+      reply.code(401).send({ error: "Unauthorized" });
+      return;
+    }
+  });
+
   await fastify.register(require("@fastify/cors"), {
     methods: ["POST"],
   });
   await fastify.register(require("./plugins/actualConnector"));
   await fastify.register(require("./routes/transaction"));
+  await fastify.register(require("./routes/health"));
 }
 
 // Global Error Handler
