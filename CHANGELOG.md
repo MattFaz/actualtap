@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.19
+
+- Added `/health` endpoint and Docker Compose healthcheck for service monitoring
+- Removed redundant manual environment variable validation code in favor of `@fastify/env` built-in validation
+- Simplified API key check (removed case-sensitivity redundancy) and fixed hook registration order to safely use `fastify.config`
+- Updated `/transaction` route to distinguish between invalid user input (400) and server/API failures (500), improving debugging
+- Removed dead code and consolidated hardcoded operational constants (timeout/retries) for cleaner maintenance
+- **Bug Fix:** Transaction dates now respect the TZ environment variable instead of always using UTC (#53)
+- **Bug Fix:** Fixed env plugin to use `fastify-plugin` wrapper, ensuring `fastify.config` is properly available to subsequent plugins
+
 ## v1.0.18
 
 - Increased `pluginTimeout` in server configuration from 30s to 120s to prevent crashes during budget download retries on slow connections
