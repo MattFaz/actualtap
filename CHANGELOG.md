@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.20
+
+- Update @actual-app/api from 25.11.0 to 25.12.0
+
+
 ## v1.0.19
 
 - Added `/health` endpoint and Docker Compose healthcheck for service monitoring
