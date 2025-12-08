@@ -388,6 +388,12 @@ actualtap.yourdomain.com {
   - Verify network connectivity
   - Try restarting ActualTap
 
+**Error: `Budget failed to open. This is likely due to a version mismatch...`**
+- **Cause:** The Actual Budget server version is newer than the @actual-app/api version bundled with ActualTap
+- **Solution:**
+  - Update ActualTap to the latest version that matches your Actual Budget server version
+  - Check the [releases page](https://github.com/MattFaz/actualtap/releases) for version compatibility
+
 #### Transaction Errors
 
 **Error: `401 Unauthorized`**

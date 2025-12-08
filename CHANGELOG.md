@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.21
+
+- Added sanity check after budget download to detect silent failures (e.g., out-of-sync migrations)
+- Server now fails to start with a clear error message when budget fails to open due to version mismatch
+- Updated troubleshooting docs with version mismatch error guidance
+
 ## v1.0.20
 
 - Update @actual-app/api from 25.11.0 to 25.12.0

@@ -114,22 +114,34 @@ const downloadBudget = async (syncId, encryptionPassword, logger, maxRetries, re
 
       if (attempt < maxRetries) {
         logger.info(`Retrying in ${retryDelay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
       }
     }
   }
 
   // All retries exhausted
-  throw new Error(`Failed to download budget after ${maxRetries} attempts: ${lastError.message || lastError.reason || lastError}`);
+  throw new Error(
+    `Failed to download budget after ${maxRetries} attempts: ${lastError.message || lastError.reason || lastError}`
+  );
+};
+
+// Verify budget is actually open and usable
+const verifyBudgetOpen = async () => {
+  try {
+    await actual.getAccounts();
+  } catch (err) {
+    if (err.message?.includes("No budget file is open")) {
+      throw new Error(
+        "Budget failed to open. This is likely due to a version mismatch between ActualTap and your Actual Budget server. " +
+          "Please ensure ActualTap is updated to match your Actual Budget server version."
+      );
+    }
+    throw new Error(`Failed to verify budget: ${err.message}`);
+  }
 };
 
 const actualConnector = fp(async (fastify) => {
-  const { 
-    ACTUAL_URL, 
-    ACTUAL_PASSWORD, 
-    ACTUAL_SYNC_ID, 
-    ACTUAL_ENCRYPTION_PASSWORD 
-  } = fastify.config;
+  const { ACTUAL_URL, ACTUAL_PASSWORD, ACTUAL_SYNC_ID, ACTUAL_ENCRYPTION_PASSWORD } = fastify.config;
 
   const TIMEOUT = 30000;
   const RETRY_COUNT = 3;
@@ -159,7 +171,10 @@ const actualConnector = fp(async (fastify) => {
 
   // Download budget
   await downloadBudget(ACTUAL_SYNC_ID, ACTUAL_ENCRYPTION_PASSWORD, fastify.log, RETRY_COUNT, RETRY_DELAY);
-  fastify.log.info("Budget downloaded successfully");
+
+  // Verify budget is actually open (catches silent failures like out-of-sync migrations)
+  await verifyBudgetOpen();
+  fastify.log.info("Budget downloaded and verified successfully");
 
   // Decorate fastify instance
   fastify.decorate("actual", actual);
