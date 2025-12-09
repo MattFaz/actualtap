@@ -19,6 +19,10 @@ describe("Transaction API", () => {
       console.log(`Cleaned up ${createdTransactionIds.length} test transaction(s)`);
     }
     await app.close();
+
+    // Force exit after Actual API finishes final sync
+    // The API keeps internal handles alive after close()
+    setTimeout(() => process.exit(0), 2000);
   });
 
   describe("Success scenarios", () => {
