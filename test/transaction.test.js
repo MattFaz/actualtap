@@ -2,7 +2,7 @@ const { describe, it, before, after } = require("node:test");
 const assert = require("node:assert");
 const { buildServer, cleanupTransactions, getFirstAccount } = require("./helpers");
 
-describe("Transaction API", async () => {
+describe("Transaction API", () => {
   let app;
   let testAccount;
   const createdTransactionIds = [];
