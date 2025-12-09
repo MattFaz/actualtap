@@ -6,6 +6,8 @@
 - Server now fails to start with a clear error message when budget fails to open due to version mismatch
 - Updated troubleshooting docs with version mismatch error guidance
 - **Security:** Converted to multi-stage Docker build to remove CVE-2025-64756 (glob) and CVE-2025-64118 (tar) from runtime image
+- Added integration tests for transaction API and initialization failures (12 tests total)
+- Transaction endpoint now returns transaction ID in response for test cleanup support
 
 ## v1.0.20
 
