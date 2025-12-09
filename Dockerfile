@@ -1,20 +1,28 @@
-# use node alpine image as build image
-FROM node:lts-alpine
+# Stage 1: Install dependencies
+FROM node:lts-alpine AS builder
 
-# create work directory in app folder
 WORKDIR /app
 
-# copy over files
-COPY package.json package-lock.json* /app/
+COPY package.json package-lock.json* ./
 
-# install all dependencies
-RUN npm ci
+RUN npm ci --omit=dev
 
-# copy over all files to the work directory
-COPY ./src /app/src
+# Stage 2: Runtime (without npm to remove CVEs in npm's dependencies)
+FROM node:lts-alpine
 
-# expose the host and port 3001 to the server
+WORKDIR /app
+
+# Copy only what we need from builder
+COPY --from=builder /app/node_modules ./node_modules
+COPY ./src ./src
+COPY package.json ./
+
+# Remove npm and its vulnerable dependencies (glob, tar)
+# These are only needed at build time, not runtime
+RUN rm -rf /usr/local/lib/node_modules/npm \
+           /usr/local/bin/npm \
+           /usr/local/bin/npx
+
 EXPOSE 3001
 
-# start the app
 CMD ["node", "src/server.js"]
