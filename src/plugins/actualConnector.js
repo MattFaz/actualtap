@@ -180,14 +180,12 @@ const actualConnector = fp(async (fastify) => {
   fastify.decorate("actual", actual);
 
   // Cleanup on shutdown
-  fastify.addHook("onClose", async (done) => {
+  fastify.addHook("onClose", async () => {
     try {
       await actual.close();
       fastify.log.info("Actual API closed");
-      done();
     } catch (err) {
       fastify.log.error(`Cleanup error: ${err.message}`);
-      done(err);
     }
   });
 });

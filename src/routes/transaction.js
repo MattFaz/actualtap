@@ -1,3 +1,5 @@
+const { randomUUID } = require("crypto");
+
 const transactionSchema = {
   schema: {
     body: {
@@ -24,6 +26,7 @@ const createTransaction = (request) => {
   const transactionAmount = amount !== undefined ? Math.round(amount * 100) * (isDeposit ? 1 : -1) : 0;
 
   return {
+    id: randomUUID(),
     payee_name: payee || "Unknown",
     amount: transactionAmount,
     notes: notes || "",
