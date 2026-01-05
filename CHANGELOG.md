@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.22
+
+- Update @actual-app/api from 25.12.0 to 26.1.0
+
+
 ## v1.0.21
 
 - Added sanity check after budget download to detect silent failures (e.g., out-of-sync migrations)
