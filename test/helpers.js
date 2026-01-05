@@ -13,7 +13,7 @@ async function buildServer() {
 
   // Auth hook
   app.addHook("preHandler", async (request, reply) => {
-    if (request.routerPath === "/health") return;
+    if (request.url === "/health" || request.url.startsWith("/health?")) return;
     const apiKey = request.headers["x-api-key"];
     if (apiKey !== app.config.API_KEY) {
       reply.code(401).send({ error: "Unauthorized" });

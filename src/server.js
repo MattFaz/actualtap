@@ -23,7 +23,7 @@ async function registerModules() {
 
   // Global authentication hook - registered after env to access fastify.config
   fastify.addHook("preHandler", async (request, reply) => {
-    if (request.routerPath === "/health") {
+    if (request.url === "/health" || request.url.startsWith("/health?")) {
       return;
     }
 
