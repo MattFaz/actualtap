@@ -10,7 +10,7 @@ permissions:
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && github.actor == 'dependabot[bot]' && startsWith(github.event.pull_request.title, 'Bump @actual-app/api')
+    if: github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]' && github.actor == 'github-actions[bot]' && startsWith(github.event.pull_request.title, 'Bump @actual-app/api')
 
     steps:
       - name: Checkout code
