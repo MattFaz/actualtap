@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.24
+
+- Update @actual-app/api from 26.1.0 to 26.2.0
+
+
 ## v1.0.23
 
 - Fixed `/health` endpoint returning 401 Unauthorized when no API key is provided (#66). The health check bypass was using `request.routerPath` which is `undefined` due to Fastify's plugin encapsulation; switched to `request.url` for reliable matching.
