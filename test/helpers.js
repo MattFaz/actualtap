@@ -7,6 +7,11 @@ const fastify = require("fastify");
 async function buildServer() {
   const app = fastify({
     logger: false,
+    ajv: {
+      customOptions: {
+        allowUnionTypes: true,
+      },
+    },
   });
 
   await app.register(require("../src/plugins/env"));

@@ -10,6 +10,11 @@ const fastify = require("fastify")({
       },
     },
   },
+  ajv: {
+    customOptions: {
+      allowUnionTypes: true,
+    },
+  },
   routerOptions: {
     ignoreTrailingSlash: true,
   },
@@ -53,7 +58,7 @@ const start = async () => {
   try {
     fastify.log.info(`Starting ActualTap v${version}`);
     await registerModules();
-    await fastify.listen({ port: 3001, host: "0.0.0.0" });
+    await fastify.listen({ port: 3001, host: "::" });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
