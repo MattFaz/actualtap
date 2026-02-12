@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.25
+
+- Listen on IPv6 (dual-stack) instead of IPv4 only, enabling both IPv4 and IPv6 connections (#64)
+- Transaction endpoint now explicitly awaits sync before responding, returning 500 if sync fails instead of a false 200 (#55)
+- Added unit tests for sync failure handling
+- Transaction amount now accepts both number and string types, fixing Apple Shortcuts sending amount as text instead of number (#63)
+
 ## v1.0.24
 
 - Update @actual-app/api from 26.1.0 to 26.2.0

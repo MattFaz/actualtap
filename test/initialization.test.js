@@ -6,7 +6,7 @@ const fastify = require("fastify");
  * Build server with custom env overrides for testing initialization failures.
  */
 async function buildServerWithEnv(envOverrides) {
-  const app = fastify({ logger: false });
+  const app = fastify({ logger: false, ajv: { customOptions: { allowUnionTypes: true } } });
 
   // Custom env plugin with overrides
   const originalEnv = { ...process.env };

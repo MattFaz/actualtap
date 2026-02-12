@@ -5,7 +5,7 @@ const transactionSchema = {
     body: {
       type: "object",
       properties: {
-        amount: { type: "number", default: 0 },
+        amount: { type: ["number", "string"], default: 0 },
         payee: { type: "string", default: "Unknown" },
         account: { type: "string" },
         notes: { type: "string" },
@@ -21,9 +21,10 @@ const transactionSchema = {
 };
 
 const createTransaction = (request) => {
-  const { payee, amount, notes, type = "payment" } = request.body;
+  const { payee, amount: rawAmount, notes, type = "payment" } = request.body;
+  const amount = typeof rawAmount === "string" ? parseFloat(rawAmount) : rawAmount;
   const isDeposit = type === "deposit";
-  const transactionAmount = amount !== undefined ? Math.round(amount * 100) * (isDeposit ? 1 : -1) : 0;
+  const transactionAmount = amount !== undefined && !isNaN(amount) ? Math.round(amount * 100) * (isDeposit ? 1 : -1) : 0;
 
   return {
     id: randomUUID(),
@@ -57,14 +58,27 @@ module.exports = async (fastify, opts) => {
     }
 
     const result = await fastify.actual.addTransactions(accountId, [transaction]);
-    
-    if (result === "ok") {
-      fastify.log.info("Transaction added successfully");
-      return reply.send(transaction);
+
+    if (result !== "ok") {
+      const errorMessage = result?.errors ? result.errors.join(", ") : JSON.stringify(result);
+      throw new Error(`Failed to add transaction: ${errorMessage}`);
     }
-    
-    // If not "ok", it's an error. Throwing will be caught by global error handler (500)
-    const errorMessage = result?.errors ? result.errors.join(", ") : JSON.stringify(result);
-    throw new Error(`Failed to add transaction: ${errorMessage}`);
+
+    fastify.log.info("Transaction added successfully");
+
+    // Explicitly sync to the server so we catch errors (e.g. expired auth)
+    // before responding, rather than returning 200 with a silent sync failure
+    try {
+      await fastify.actual.sync();
+      fastify.log.info("Sync completed successfully");
+    } catch (syncErr) {
+      fastify.log.error(`Sync failed after adding transaction: ${syncErr.message}`);
+      return reply.code(500).send({
+        error: "Sync failed",
+        message: "Transaction was saved locally but failed to sync to the server. It may be lost on restart.",
+      });
+    }
+
+    return reply.send(transaction);
   });
 };

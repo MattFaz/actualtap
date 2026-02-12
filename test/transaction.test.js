@@ -94,6 +94,49 @@ describe("Transaction API", () => {
       createdTransactionIds.push(body.id);
     });
 
+    it("should accept amount as a string (payment)", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: "4.00",
+          payee: "Test String Amount",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.amount, -400, "String amount should be parsed and negative for payment");
+      createdTransactionIds.push(body.id);
+    });
+
+    it("should accept amount as a string (deposit)", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: "25.50",
+          payee: "Test String Deposit",
+          type: "deposit",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.amount, 2550, "String amount should be parsed and positive for deposit");
+      createdTransactionIds.push(body.id);
+    });
+
     it("should use default values when optional fields omitted", async () => {
       const response = await app.inject({
         method: "POST",
