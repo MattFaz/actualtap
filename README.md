@@ -178,9 +178,9 @@ You do not need to make any edits to the Shortcut. Once added, follow the below 
       | URL |Text|https://actualtap.yourdomain.com|
       | API_KEY |Text|*api_key used when setting up ActualTap*|
       | Account | Text | *exact name of Account in Actual Budget* |
-      | Merchant | Transaction | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Merchant* |
-      | Name | Transaction | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Name* |
-      | Amount | Transaction |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
+      | Merchant | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Merchant* |
+      | Name | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Name* |
+      | Amount | Text or Number |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
 
 4. Search & tap on *'Run Shortcut'*
 5. Tap *'Shortcut'* and select *'ActualTap'*
