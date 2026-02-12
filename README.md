@@ -14,6 +14,8 @@ Actual Tap bridges the gap between mobile payments and your Actual Budget, makin
 
 - 🚀 Fast and lightweight Fastify API
 - 💳 Automatic transaction creation from Tap-to-Pay
+- 💳 Multi card support (ios)
+- ❓ Fallback account in case the card is wrong/null
 - 📱 Mobile automation support (iOS Shortcuts & Android Tasker)
     - [iOS Shortcut](#ios-setup)
 - 🔒 Secure API key authentication
@@ -46,7 +48,7 @@ Content-Type: application/json
 ```json
 {
   "account": "Checking",  // Required: Name of the account in Actual Budget
-  "amount": 10.50,       // Optional: Transaction amount (defaults to 0)
+  "amount": 10.50,       // Optional: Transaction amount (defaults to 0). If negative then it's a deposit
   "payee": "Starbucks",  // Optional: Name of the payee (defaults to "Unknown")
   "type": "payment"      // Optional: "payment" or "deposit" (defaults to "payment")
 }
@@ -161,11 +163,23 @@ The app will run on port `3001` by default.
 
 Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to trigger the Shortcut upon tapping your iOS device to pay.
 
-Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/8565706304b645e490e56367b19a60c5
+Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/6586d705185c49dab336ffa2945e30fe
 
-You do not need to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
+The following edits must be made to the shortcut:
+- Define the fallback account in the `text` block (see comment inside the shortcut)
+- Complete the card-account `dictionary` mapping (see comment inside the shortcut)
 
-<img src="images/automation.png" height="350">
+Click the following link to download and add the manual test Shortcuts: 
+- General one: https://www.icloud.com/shortcuts/a4dd567edc3f4ce19c357d9e7903f16d
+- Test with card fallback and weird merchant: https://www.icloud.com/shortcuts/5598a7503c7d475e9dd8467d0469363c
+
+
+Click the following link to download and the template automation:
+- Note that this is a shortcut, but to allow transactions it must be an automation. This shortcut is kept for reference
+https://www.icloud.com/shortcuts/3a40112fe5d94a7bbcb840f6e99e36ae 
+
+
+<img src="images/automation.jpeg" height="350">
 
 1. Open Shortcuts app, select *'Automations'*, then *'+'* to create a new Automation
 2. Tap *'Wallet'* and Enable relevant Card, all Categories, then select *'Run Immediately'*
@@ -177,13 +191,12 @@ You do not need to make any edits to the Shortcut. Once added, follow the below 
       | - | - | - |
       | URL |Text|https://actualtap.yourdomain.com|
       | API_KEY |Text|*api_key used when setting up ActualTap*|
-      | Account | Text | *exact name of Account in Actual Budget* |
       | Merchant | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Merchant* |
       | Name | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Name* |
       | Amount | Text or Number |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
 
 4. Search & tap on *'Run Shortcut'*
-5. Tap *'Shortcut'* and select *'ActualTap'*
+5. Tap *'Shortcut'* and select *'actual-tap-multi-account-template'*
 6. Tap the *'>'* to expand the action, and change *'Input'* value to *'Dictionary'*
 
 ### Android Setup
