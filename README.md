@@ -162,8 +162,9 @@ The app will run on port `3001` by default.
 ### iOS Setup
 
 Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to trigger the Shortcut upon tapping your iOS device to pay.
+- If you change the name of the shortcut remember to link the manual test and/or the automation to the right new name
 
-Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/6586d705185c49dab336ffa2945e30fe
+Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/8eb888573fff4935abc66ec4dd5195f4
 
 The following edits must be made to the shortcut:
 - Define the fallback account in the `text` block (see comment inside the shortcut)
