@@ -58,7 +58,17 @@ const start = async () => {
   try {
     fastify.log.info(`Starting ActualTap v${version}`);
     await registerModules();
-    await fastify.listen({ port: 3001, host: "::" });
+    try {
+      // Try IPv6 dual-stack first
+      await fastify.listen({ port: 3001, host: "::" });
+    } catch (err) {
+      if (err.code === 'EAFNOSUPPORT' || err.message.includes('address family not supported')) {
+        fastify.log.warn('IPv6 not supported, falling back to IPv4');
+        await fastify.listen({ port: 3001, host: "0.0.0.0" });
+      } else {
+        throw err;
+      }
+    }
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
