@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.26
+
+- Update @actual-app/api from 26.2.0 to 26.2.1
+
+
 ## v1.0.25
 
 - Listen on IPv6 (dual-stack) instead of IPv4 only, enabling both IPv4 and IPv6 connections (#64)
