@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.28
+
+- Update @actual-app/api from 26.3.0 to 26.4.0
+- Bump fastify from 5.7.4 to 5.8.4
+- Bump @fastify/env from 5.0.3 to 6.0.0
+- Bump nodemon from 3.1.11 to 3.1.14
+- Bump minimatch (security update)
+- Bump ajv (security update)
+
+
 ## v1.0.27
 
 - Update @actual-app/api from 26.2.1 to 26.3.0
