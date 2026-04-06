@@ -1,6 +1,7 @@
 const { describe, it } = require("node:test");
 const assert = require("node:assert");
 const fastify = require("fastify");
+const actual = require("@actual-app/api");
 
 /**
  * Build server with custom env overrides for testing initialization failures.
@@ -24,6 +25,8 @@ async function buildServerWithEnv(envOverrides) {
         process.env[key] = originalEnv[key];
       }
     });
+    // Close Actual API to prevent leaked handles from failed init attempts
+    try { await actual.shutdown(); } catch {}
   }
 
   return app;
