@@ -2,7 +2,7 @@
   "dependencies": {
     "@actual-app/api": "^26.3.0",
     "@fastify/cors": "^11.2.0",
-    "@fastify/env": "^5.0.3",
+    "@fastify/env": "^6.0.0",
     "fastify": "^5.8.2",
     "fastify-plugin": "^5.1.0",
     "pino-pretty": "^13.1.3"
