@@ -175,7 +175,7 @@ Click the following link to download and add the manual test Shortcuts:
 - Test with card fallback and weird merchant: https://www.icloud.com/shortcuts/5598a7503c7d475e9dd8467d0469363c
 
 
-Click the following link to download and the template automation:
+Click the following link to download the template automation:
 - Note that this is a shortcut, but to allow transactions it must be an automation. This shortcut is kept for reference
 https://www.icloud.com/shortcuts/3a40112fe5d94a7bbcb840f6e99e36ae 
 
