@@ -14,7 +14,7 @@ Actual Tap bridges the gap between mobile payments and your Actual Budget, makin
 
 - 🚀 Fast and lightweight Fastify API
 - 💳 Automatic transaction creation from Tap-to-Pay
-- 💳 Multi card support (ios)
+- 💳 Multi card support (iOS)
 - ❓ Fallback account in case the card is wrong/null
 - 📱 Mobile automation support (iOS Shortcuts & Android Tasker)
     - [iOS Shortcut](#ios-setup)
