@@ -14,6 +14,8 @@ Actual Tap bridges the gap between mobile payments and your Actual Budget, makin
 
 - 🚀 Fast and lightweight Fastify API
 - 💳 Automatic transaction creation from Tap-to-Pay
+  - Multi card support
+  - Fallback account in case the card is wrong/null
 - 📱 Mobile automation support (iOS Shortcuts & Android Tasker)
     - [iOS Shortcut](#ios-setup)
 - 🔒 Secure API key authentication
@@ -46,7 +48,7 @@ Content-Type: application/json
 ```json
 {
   "account": "Checking",  // Required: Name of the account in Actual Budget
-  "amount": 10.50,       // Optional: Transaction amount (defaults to 0)
+  "amount": 10.50,       // Optional: Transaction amount (defaults to 0), negative value is a deposit
   "payee": "Starbucks",  // Optional: Name of the payee (defaults to "Unknown")
   "type": "payment"      // Optional: "payment" or "deposit" (defaults to "payment")
 }
@@ -161,9 +163,20 @@ The app will run on port `3001` by default.
 
 Setup for iOS has 2 parts, one is a Shortcut, and the second is an Automation to trigger the Shortcut upon tapping your iOS device to pay.
 
-Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/8565706304b645e490e56367b19a60c5
+Click the following link to download and add the Shortcut: https://www.icloud.com/shortcuts/7d77085c7cab4278933fc6666d227fe7
 
-You do not need to make any edits to the Shortcut. Once added, follow the below steps to create the Automation, end result will look like the screenshot below:
+**The following edits must be made to the shortcut:**
+
+*Note: There are comments inside the shortcut to guide you on where edits must be made*
+
+- Define the fallback account in the "text" block
+  - This should be an exact match with an account name in Actual Budget
+- Complete the card to account "dicitonary" mapping
+  - The key (left side) should be an exact match with the Card Name in iOS Wallet
+    - Find this value by going to Wallet > Select a Card > Tap 3 dots > Card Details > Name is displayed under the Card image
+  - The value (right side) should be an exact match with an account name in Actual Budget
+
+**Follow the below steps to create the Automation:**
 
 <img src="images/automation.png" height="350">
 
@@ -177,7 +190,7 @@ You do not need to make any edits to the Shortcut. Once added, follow the below 
       | - | - | - |
       | URL |Text|https://actualtap.yourdomain.com|
       | API_KEY |Text|*api_key used when setting up ActualTap*|
-      | Account | Text | *exact name of Account in Actual Budget* |
+      | card_name | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Card or Pass* |
       | Merchant | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Merchant* |
       | Name | Text | *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Name* |
       | Amount | Text or Number |  *Tap 'Select Variable' then tap 'Shortcut Input'. Then Tap 'Shortcut Input' in the Value and change it to Amount* |
