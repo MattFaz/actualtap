@@ -171,7 +171,7 @@ Click the following link to download and add the Shortcut: https://www.icloud.co
 
 - Define the fallback account in the "text" block
   - This should be an exact match with an account name in Actual Budget
-- Complete the card to account "dicitonary" mapping
+- Complete the card to account "dictionary" mapping
   - The key (left side) should be an exact match with the Card Name in iOS Wallet
     - Find this value by going to Wallet > Select a Card > Tap 3 dots > Card Details > Name is displayed under the Card image
   - The value (right side) should be an exact match with an account name in Actual Budget
