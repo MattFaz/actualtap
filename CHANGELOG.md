@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.0.30
+
+- Update @actual-app/api from 26.4.0 to 26.5.0
+
+## v1.0.29
+
+- Bump picomatch in the npm_and_yarn group across 1 directory
+- Bump fastify from 5.8.4 to 5.8.5
+- Multi Account Shortcut update
+- Dependency bump, v1.0.29
+
 ## v1.0.28
 
 - Update @actual-app/api from 26.3.0 to 26.4.0
@@ -9,16 +20,13 @@
 - Bump minimatch (security update)
 - Bump ajv (security update)
 
-
 ## v1.0.27
 
 - Update @actual-app/api from 26.2.1 to 26.3.0
 
-
 ## v1.0.26
 
 - Update @actual-app/api from 26.2.0 to 26.2.1
-
 
 ## v1.0.25
 
@@ -31,7 +39,6 @@
 
 - Update @actual-app/api from 26.1.0 to 26.2.0
 
-
 ## v1.0.23
 
 - Fixed `/health` endpoint returning 401 Unauthorized when no API key is provided (#66). The health check bypass was using `request.routerPath` which is `undefined` due to Fastify's plugin encapsulation; switched to `request.url` for reliable matching.
@@ -39,7 +46,6 @@
 ## v1.0.22
 
 - Update @actual-app/api from 25.12.0 to 26.1.0
-
 
 ## v1.0.21
 
@@ -89,11 +95,13 @@
 - Bump @actual-app/api from 25.9.0 to 25.10.0
 
 ## v1.0.15
+
 - **Major Change:** Now uses OS temporary directories instead of persistent storage
 - Simplified retry logic to handle all errors uniformly with automatic retries (up to 3 attempts)
 - Added bruno to .gitignore (API testing client)
 
 ## v1.0.14
+
 - Password option now only passed to `downloadBudget()` when `ACTUAL_ENCRYPTION_PASSWORD` is set, hopefully preventing sync errors for non-encrypted budgets (issue #36)
 - Updated fastify from 5.4.0 to 5.6.1
 - Updated fastify-plugin from 5.0.1 to 5.1.0
@@ -128,6 +136,7 @@
 ## v1.0.8
 
 ### Fixed
+
 - **CRITICAL SECURITY FIX**: Fixed API key authentication bypass issue where authentication hook was not applying to transaction routes due to Fastify plugin encapsulation
 - Moved authentication hook from plugin-scoped context to global root level registration to ensure all routes are properly protected
 - API requests without valid `X-API-KEY` header are now correctly rejected with 401 Unauthorized status
@@ -137,6 +146,7 @@
 This release includes a **BREAKING CHANGE**. You will need to change the variable name `ACTUAL_BUDGET_ID` to `ACTUAL_SYNC_ID`
 
 ### Changed
+
 - Renamed environment variable `ACTUAL_BUDGET_ID` to `ACTUAL_SYNC_ID` for better clarity
 - Updated all references to use sync ID terminology consistently across documentation and code
 - Updated package dependencies to latest versions
@@ -144,19 +154,23 @@ This release includes a **BREAKING CHANGE**. You will need to change the variabl
 ## v1.0.5
 
 ### Changed
+
 - Updated transaction handling from `importTransactions()` to `addTransactions()` for better API compatibility
 - Simplified transaction creation by removing UUID generation and imported_id field
 - Updated response handling to properly handle "ok" return value from addTransactions API
 
 ### Added
+
 - TZ environment variable to Docker configuration for timezone support
 
 ### Fixed
+
 - Fixed 500 error when transactions were successfully added due to incorrect response format handling
 
 ## v1.0.4
 
 ### Fixed
+
 - Case-insensitive API key header check in auth hook to properly handle different header capitalizations
 - Improved transaction ID generation using UUID v4 to ensure uniqueness and prevent duplicate transaction issues
 - Enhanced error logging for transaction results to provide more diagnostic information
@@ -165,4 +179,5 @@ This release includes a **BREAKING CHANGE**. You will need to change the variabl
 ## v1.0.3
 
 ### Added
+
 - Log result for Unexpected Error in `handleTransactionResult()` to assist with diagnosing errors (issue 7)
