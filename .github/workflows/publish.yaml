@@ -12,6 +12,12 @@ name: Publish Multi-Platform Docker image
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish (for example, v1.0.32)"
+        required: true
+        type: string
 
 jobs:
   push_to_registries:
@@ -25,6 +31,8 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -52,6 +60,10 @@ jobs:
           images: |
             mattyfaz/actualtap
             ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=tag
+            type=raw,value=${{ inputs.tag }},priority=600,enable=${{ github.event_name == 'workflow_dispatch' }}
+            type=raw,value=latest,priority=200,enable=${{ github.event_name == 'workflow_dispatch' }}
 
       - name: Build and push Docker images
         id: push
