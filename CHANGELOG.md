@@ -4,6 +4,7 @@
 
 - Strip currency symbols and handle locale decimal separators in Tap-to-Pay amounts (#90)
 - Use the transaction date from the request body when provided, with YYYY-MM-DD validation; defaults to the server's current date when omitted (#107)
+- Fix test suite hanging when Actual API initialization exceeds Fastify's plugin timeout, and fix shutdown cleanup calling a nonexistent API method (#111)
 
 
 ## v1.0.33
