@@ -3,6 +3,7 @@
 ## v1.0.34
 
 - Strip currency symbols and handle locale decimal separators in Tap-to-Pay amounts (#90)
+- Use the transaction date from the request body when provided, with YYYY-MM-DD validation; defaults to the server's current date when omitted (#107)
 
 
 ## v1.0.33
