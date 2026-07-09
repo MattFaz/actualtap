@@ -50,7 +50,8 @@ Content-Type: application/json
   "account": "Checking",  // Required: Name of the account in Actual Budget
   "amount": 10.50,       // Optional: Transaction amount (defaults to 0), negative value is a deposit
   "payee": "Starbucks",  // Optional: Name of the payee (defaults to "Unknown")
-  "type": "payment"      // Optional: "payment" or "deposit" (defaults to "payment")
+  "type": "payment",     // Optional: "payment" or "deposit" (defaults to "payment")
+  "date": "2026-07-01"   // Optional: Transaction date in YYYY-MM-DD format (defaults to the server's current date)
 }
 ```
 

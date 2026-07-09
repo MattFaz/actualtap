@@ -134,6 +134,49 @@ describe("Transaction API", () => {
       createdTransactionIds.push(body.id);
     });
 
+    it("should use the date provided in the request", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: 3.21,
+          payee: "Test Provided Date",
+          date: "2026-07-01",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.date, "2026-07-01", "Should use the date from the request body");
+      createdTransactionIds.push(body.id);
+    });
+
+    it("should default to the server date when date is omitted", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: 1.23,
+          payee: "Test Default Date",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.date, new Date().toLocaleDateString("en-CA"), "Should default to today's date");
+      createdTransactionIds.push(body.id);
+    });
+
     it("should use default values when optional fields omitted", async () => {
       const response = await app.inject({
         method: "POST",
@@ -228,6 +271,44 @@ describe("Transaction API", () => {
       });
 
       assert.strictEqual(response.statusCode, 400);
+    });
+
+    it("should return 400 when date is malformed", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: 10.00,
+          date: "07/01/2026",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 400);
+    });
+
+    it("should return 400 when date is not a real calendar date", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: 10.00,
+          date: "2026-02-31",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 400);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.error, "Invalid date");
     });
 
     it("should return 400 when type is invalid", async () => {
