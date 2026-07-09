@@ -182,8 +182,8 @@ const actualConnector = fp(async (fastify) => {
   // Cleanup on shutdown
   fastify.addHook("onClose", async () => {
     try {
-      await actual.close();
-      fastify.log.info("Actual API closed");
+      await actual.shutdown();
+      fastify.log.info("Actual API shut down");
     } catch (err) {
       fastify.log.error(`Cleanup error: ${err.message}`);
     }
