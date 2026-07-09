@@ -13,13 +13,17 @@ describe("Transaction API", () => {
   });
 
   after(async () => {
+    // If before() failed, app was never assigned - nothing to clean up
+    if (!app) return;
+
     // Cleanup all created transactions
     if (createdTransactionIds.length > 0) {
       await cleanupTransactions(app.actual, testAccount.id, createdTransactionIds);
       console.log(`Cleaned up ${createdTransactionIds.length} test transaction(s)`);
     }
+
+    // app.close() shuts down the Actual API via the connector's onClose hook
     await app.close();
-    await app.actual.shutdown();
   });
 
   describe("Success scenarios", () => {

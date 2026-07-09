@@ -7,6 +7,7 @@ const fastify = require("fastify");
 async function buildServer() {
   const app = fastify({
     logger: false,
+    pluginTimeout: 120000, // Match src/server.js - Actual API init can exceed Fastify's 10s default
     ajv: {
       customOptions: {
         allowUnionTypes: true,
