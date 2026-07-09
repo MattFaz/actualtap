@@ -134,6 +134,111 @@ describe("Transaction API", () => {
       createdTransactionIds.push(body.id);
     });
 
+    it("should strip a currency symbol from a string amount", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: "£12.34",
+          payee: "Test Currency Symbol",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.amount, -1234, "Currency symbol should be stripped before parsing");
+      createdTransactionIds.push(body.id);
+    });
+
+    it("should parse a comma decimal separator", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: "12,34",
+          payee: "Test Comma Decimal",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.amount, -1234, "Comma should be treated as the decimal separator");
+      createdTransactionIds.push(body.id);
+    });
+
+    it("should parse a currency symbol with comma decimal separator", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: "€12,34",
+          payee: "Test Euro Comma",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.amount, -1234, "Symbol should be stripped and comma treated as decimal");
+      createdTransactionIds.push(body.id);
+    });
+
+    it("should parse thousands separators with a dot decimal", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: "$1,234.56",
+          payee: "Test Thousands Dot Decimal",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.amount, -123456, "Comma thousands separator should be removed");
+      createdTransactionIds.push(body.id);
+    });
+
+    it("should parse European format with dot thousands and comma decimal", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/transaction",
+        headers: {
+          "x-api-key": app.config.API_KEY,
+          "content-type": "application/json",
+        },
+        payload: {
+          account: testAccount.name,
+          amount: "1.234,56 €",
+          payee: "Test European Format",
+        },
+      });
+
+      assert.strictEqual(response.statusCode, 200);
+      const body = JSON.parse(response.body);
+      assert.strictEqual(body.amount, -123456, "Dot thousands separator should be removed and comma treated as decimal");
+      createdTransactionIds.push(body.id);
+    });
+
     it("should use the date provided in the request", async () => {
       const response = await app.inject({
         method: "POST",
