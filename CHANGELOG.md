@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.34
+
+- Strip currency symbols and handle locale decimal separators in Tap-to-Pay amounts (#90)
+
+
 ## v1.0.33
 
 - Update @actual-app/api from 26.6.0 to 26.7.0
