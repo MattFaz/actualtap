@@ -158,7 +158,7 @@ const actualConnector = fp(async (fastify) => {
   fastify.log.info("Server is reachable");
 
   // Initialize Actual API
-  await initializeActual(url, ACTUAL_PASSWORD, TIMEOUT);
+  const actualInternal = await initializeActual(url, ACTUAL_PASSWORD, TIMEOUT);
   fastify.log.info("Actual API initialized");
 
   // Verify authentication and get budgets
@@ -178,6 +178,7 @@ const actualConnector = fp(async (fastify) => {
 
   // Decorate fastify instance
   fastify.decorate("actual", actual);
+  fastify.decorate("actualInternal", actualInternal);
 
   // Cleanup on shutdown
   fastify.addHook("onClose", async () => {

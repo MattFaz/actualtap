@@ -10,6 +10,8 @@ const transactionSchema = {
         account: { type: "string" },
         notes: { type: "string" },
         date: { type: "string", pattern: "^\\d{4}-\\d{2}-\\d{2}$" },
+        latitude: { type: "number", minimum: -90, maximum: 90 },
+        longitude: { type: "number", minimum: -180, maximum: 180 },
         type: {
           type: "string",
           enum: ["payment", "deposit"],
@@ -71,9 +73,30 @@ const getAccountId = async (fastify, accountName) => {
   return { accountId: account?.id, accounts };
 };
 
+const savePayeeLocation = async (fastify, payeeName, latitude, longitude) => {
+  const payee = (await fastify.actual.getPayees()).find(
+    ({ name }) => name.toLowerCase() === payeeName.trim().toLowerCase()
+  );
+  if (!payee) return;
+
+  const nearby = await fastify.actualInternal.send("api/payees-get-nearby", {
+    latitude,
+    longitude,
+    maxDistance: 500,
+  });
+  if (!nearby.some(({ payee_id }) => payee_id === payee.id)) {
+    await fastify.actualInternal.send("api/payee-location-create", { payeeId: payee.id, latitude, longitude });
+  }
+};
+
 module.exports = async (fastify, opts) => {
   fastify.post("/transaction", transactionSchema, async (request, reply) => {
     request.log.info(`Received transaction request with body: ${JSON.stringify(request.body)}`);
+
+    const hasLocation = request.body.latitude !== undefined || request.body.longitude !== undefined;
+    if (hasLocation && (request.body.latitude === undefined || request.body.longitude === undefined)) {
+      return reply.code(400).send({ error: "Invalid location", message: "latitude and longitude must be provided together" });
+    }
 
     if (request.body.date && !isValidDate(request.body.date)) {
       return reply.code(400).send({
@@ -101,6 +124,10 @@ module.exports = async (fastify, opts) => {
     }
 
     fastify.log.info("Transaction added successfully");
+
+    if (hasLocation) {
+      await savePayeeLocation(fastify, transaction.payee_name, request.body.latitude, request.body.longitude);
+    }
 
     // Explicitly sync to the server so we catch errors (e.g. expired auth)
     // before responding, rather than returning 200 with a silent sync failure

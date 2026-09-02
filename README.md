@@ -57,7 +57,9 @@ Content-Type: application/json
   "amount": 10.5, // Optional: Transaction amount (defaults to 0), negative value is a deposit
   "payee": "Starbucks", // Optional: Name of the payee (defaults to "Unknown")
   "type": "payment", // Optional: "payment" or "deposit" (defaults to "payment")
-  "date": "2026-07-01" // Optional: Transaction date in YYYY-MM-DD format (defaults to the server's current date)
+  "date": "2026-07-01", // Optional: Transaction date in YYYY-MM-DD format (defaults to the server's current date)
+  "latitude": -37.8136, // Optional: Current location; requires longitude
+  "longitude": 144.9631 // Optional: Current location; requires latitude
 }
 ```
 
