@@ -84,7 +84,7 @@ const savePayeeLocation = async (fastify, payeeName, latitude, longitude) => {
     longitude,
     maxDistance: 500,
   });
-  if (!nearby.some(({ payee_id }) => payee_id === payee.id)) {
+  if (!nearby.some(({ location }) => location.payee_id === payee.id)) {
     await fastify.actualInternal.send("api/payee-location-create", { payeeId: payee.id, latitude, longitude });
   }
 };
@@ -125,8 +125,14 @@ module.exports = async (fastify, opts) => {
 
     fastify.log.info("Transaction added successfully");
 
+    // Saving the payee location is best-effort: a failure here must not block
+    // the transaction from syncing, so swallow and log rather than 500.
     if (hasLocation) {
-      await savePayeeLocation(fastify, transaction.payee_name, request.body.latitude, request.body.longitude);
+      try {
+        await savePayeeLocation(fastify, transaction.payee_name, request.body.latitude, request.body.longitude);
+      } catch (locErr) {
+        request.log.error(`Failed to save payee location: ${locErr.message}`);
+      }
     }
 
     // Explicitly sync to the server so we catch errors (e.g. expired auth)

@@ -51,7 +51,7 @@ const initializeActual = async (serverURL, password, timeoutMs) => {
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "actualtap-"));
 
   try {
-    await Promise.race([
+    return await Promise.race([
       actual.init({ dataDir, serverURL, password }),
       new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), timeoutMs)),
     ]);

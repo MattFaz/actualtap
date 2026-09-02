@@ -117,7 +117,10 @@ describe("Sync failure handling", () => {
   });
 
   it("does not save a duplicate nearby payee location", async () => {
-    const app = await buildMockServer({ nearbyPayees: [{ payee_id: "payee-1" }] });
+    // Shape matches api/payees-get-nearby's real return (NearbyPayeeEntity)
+    const app = await buildMockServer({
+      nearbyPayees: [{ payee: { id: "payee-1" }, location: { payee_id: "payee-1" } }],
+    });
     const response = await app.inject({
       method: "POST",
       url: "/transaction",
