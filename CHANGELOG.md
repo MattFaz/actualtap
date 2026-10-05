@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.38
+
+- Update @actual-app/api from 26.9.0 to 26.10.0
+
+
 ## v1.0.37
 
 - Update @actual-app/api from 26.8.1 to 26.9.0
