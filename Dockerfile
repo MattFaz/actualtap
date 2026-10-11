@@ -1,6 +1,9 @@
 # Stage 1: Install dependencies
 FROM node:lts-alpine AS builder
 
+# Build tools for native modules (better-sqlite3 compiles from source)
+RUN apk add --no-cache python3 make g++
+
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
