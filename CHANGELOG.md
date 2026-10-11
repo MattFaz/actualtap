@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.39
+
+- Fix Docker image build failing on `better-sqlite3` 13 by installing native build tools in the builder stage; the v1.0.38 image was never published (#137)
+
+
 ## v1.0.38
 
 - Update @actual-app/api from 26.9.0 to 26.10.0
