@@ -215,7 +215,19 @@ _Note: There are comments inside the shortcut to guide you on where edits must b
 
 ### Android Setup
 
-**Tip: Rename the card in your Google Wallet to match the account name in Actual Budget. This will allow you to use the %account variables and use multiple cards with Google Wallet and Actual Budget.**
+**Tip:** Rename the card in your Google Wallet to match the account name in Actual Budget. This will allow you to use the %account variables and use multiple cards with Google Wallet and Actual Budget.
+
+#### Actual Budget Bridge
+
+[Actual Budget Bridge](https://github.com/aydarik/actual-bridge) uses regex to parse transaction details from notifications and sends them to Actual Budget via HTTP requests to Actual Tap.
+
+1. Download and install the latest [release](https://github.com/aydarik/actual-bridge/releases).
+2. Configure the **Actual Tap** URL and API key in the settings and grant the necessary system permissions.
+3. Configure rules to parse notifications and set up how you want to proceed.
+
+<img src="images/actual-bridge-settings.png" height=550> <img src="images/actual-bridge-rules.png" height=550>
+
+**Note:** If you want to send a location, make sure you allow it to be used all the time, as the app runs in the background while processing transactions.
 
 #### Tasker
 
